@@ -1,6 +1,6 @@
 Gammon
 ========
-An open-source backgammon implementation.
+An open-source Backgammon implementation.
 
 #### Features
 - None
