@@ -1,4 +1,4 @@
-print("Hello World")
+def f(x):
+     return x
 
-def g(y):
-    return 2*y
+print("Hello World")
