@@ -1,4 +1,15 @@
-def f(x):
-     return x
+from game import *
 
-print("Hello World")
+pygame.init()
+
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('Backgammon')
+
+
+def main():
+    game = Game(WIN)
+    game.gameloop()
+
+
+if __name__ == '__main__':
+    main()
