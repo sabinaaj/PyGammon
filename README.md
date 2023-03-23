@@ -1,6 +1,6 @@
-Gammon
+PyGammon
 ========
-An open-source Backgammon implementation.
+An open-source Backgammon implementation written in Python.
 
 #### Features
 - None
