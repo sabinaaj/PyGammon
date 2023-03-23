@@ -1,6 +1,3 @@
-import random
-
-
 class Dice:
 
     import random
