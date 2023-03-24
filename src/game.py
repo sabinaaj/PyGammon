@@ -11,12 +11,15 @@ from player import *
 class Game:
     def __init__(self, win):
         self.win = win
+        # True - multiplayer, False - singleplayer
+        self.multiplayer = False
         self.bar = Bar()
         self.dice = Dice()
         self.game_board = GameBoard()
 
 
-    def gameloop(self):
+    def gameloop(self, multiplayer):
+        self.multiplayer = multiplayer
         run = True
 
         while run:
