@@ -1,3 +1,3 @@
-#Zde prosím při každém novém buildu zvednout o 1!
-#Díky -H
+#Pri kazdem novem buildu prosim zvednout o 1
+#Diky -H
 build_num = "0001"
