@@ -31,3 +31,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
+
+    # TODO Dopsat az bude urceno, jak jsou ukladany polohy kamenu.
+    # def save_game(self):
+    #     file = open('/saves/save.json', 'w')
+    #     file.write()
