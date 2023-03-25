@@ -16,7 +16,6 @@ class Menu:
         self.win = win
         self.triangle = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')),(25, 25))
         self.menu_page = MenuPages.MAIN_MENU
-        self.game = Game(win)
         self.build = build_num
 
     def menu_loop(self):
@@ -49,9 +48,9 @@ class Menu:
         if load_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 6 - 30))
 
-        exit_rect = draw_text(self.win, "EXIT", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 8, center=False)
+        exit_rect = draw_text(self.win, "EXIT", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 7, center=False)
         if exit_rect.collidepoint(mouse_pos):
-            self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 8 - 30))
+            self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 7 - 30))
 
         pygame.display.update()
 
@@ -64,8 +63,6 @@ class Menu:
                     self.menu_page = MenuPages.GAMEMODE_MENU
                 if load_rect.collidepoint(mouse_pos):
                     pass
-                if options_rect.collidepoint(mouse_pos):
-                    self.menu_page = MenuPages.OPTIONS_MENU
                 if exit_rect.collidepoint(mouse_pos):
                     run = False
                     pygame.quit()
@@ -98,10 +95,12 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if singleplayer_rect.collidepoint(mouse_pos):
                     run = False
-                    self.game.gameloop(multiplayer=False)
+                    game = Game(self.win, multiplayer=False)
+                    game.gameloop()
                 if multiplayer_rect.collidepoint(mouse_pos):
                     run = False
-                    self.game.gameloop(multiplayer=True)
+                    game = Game(self.win, multiplayer=True)
+                    game.gameloop()
                 if back_rect.collidepoint(mouse_pos):
                     self.menu_page = MenuPages.MAIN_MENU
 
