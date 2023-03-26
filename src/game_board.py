@@ -18,7 +18,7 @@ scaled_R_BOARD = pygame.transform.scale(R_BOARD, (scaled_image_width, scaled_ima
 background = pygame.Surface((scaled_image_width * 2, scaled_image_height))
 background.blit(scaled_L_BOARD, (0, 0))
 background.blit(scaled_R_BOARD, (scaled_image_width, 0))
-
+#
 class GameBoard:
 
     def __init__(self):
