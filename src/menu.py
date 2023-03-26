@@ -9,7 +9,6 @@ from main import draw_text
 class MenuPages(Enum):
     MAIN_MENU = 0
     GAMEMODE_MENU = 1
-    OPTIONS_MENU = 2
 
 
 class Menu:
@@ -17,8 +16,8 @@ class Menu:
         self.win = win
         self.triangle = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')),(25, 25))
         self.menu_page = MenuPages.MAIN_MENU
-        self.game = Game(win)
         self.build = build_num
+
     def menu_loop(self):
         run = True
 
@@ -36,10 +35,9 @@ class Menu:
                 run = self.main_menu(mouse_pos)
             elif self.menu_page == MenuPages.GAMEMODE_MENU:
                 run = self.gamemode_menu(mouse_pos)
-            elif self.menu_page == MenuPages.OPTIONS_MENU:
-                run = self.options_menu(mouse_pos)
 
     def main_menu(self, mouse_pos):
+        #Renders the main menu text
         run = True
 
         play_rect = draw_text(self.win, "PLAY", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 5, center=False)
@@ -50,13 +48,9 @@ class Menu:
         if load_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 6 - 30))
 
-        options_rect = draw_text(self.win, "OPTIONS", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 7, center=False)
-        if options_rect.collidepoint(mouse_pos):
-            self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 7 - 30))
-
-        exit_rect = draw_text(self.win, "EXIT", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 8, center=False)
+        exit_rect = draw_text(self.win, "EXIT", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 7, center=False)
         if exit_rect.collidepoint(mouse_pos):
-            self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 8 - 30))
+            self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 7 - 30))
 
         pygame.display.update()
 
@@ -69,8 +63,6 @@ class Menu:
                     self.menu_page = MenuPages.GAMEMODE_MENU
                 if load_rect.collidepoint(mouse_pos):
                     pass
-                if options_rect.collidepoint(mouse_pos):
-                    self.menu_page = MenuPages.OPTIONS_MENU
                 if exit_rect.collidepoint(mouse_pos):
                     run = False
                     pygame.quit()
@@ -78,6 +70,7 @@ class Menu:
         return run
 
     def gamemode_menu(self, mouse_pos):
+        #Menu shown after clicking play
         run = True
 
         singleplayer_rect = draw_text(self.win, "SINGLEPLAYER", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 5,center=False)
@@ -95,35 +88,19 @@ class Menu:
         pygame.display.update()
 
         for event in pygame.event.get():
+            #Actions after clicking on menu buttons
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if singleplayer_rect.collidepoint(mouse_pos):
                     run = False
-                    self.game.gameloop(multiplayer=False)
+                    game = Game(self.win, multiplayer=False)
+                    game.gameloop()
                 if multiplayer_rect.collidepoint(mouse_pos):
                     run = False
-                    self.game.gameloop(multiplayer=True)
-                if back_rect.collidepoint(mouse_pos):
-                    self.menu_page = MenuPages.MAIN_MENU
-
-        return run
-
-    def options_menu(self, mouse_pos):
-        run = True
-
-        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, HEIGHT / 12 * 5, center=False)
-        if back_rect.collidepoint(mouse_pos):
-            self.win.blit(self.triangle, (WIDTH / 3 - 30, HEIGHT / 12 * 5 - 30))
-
-        pygame.display.update()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                    game = Game(self.win, multiplayer=True)
+                    game.gameloop()
                 if back_rect.collidepoint(mouse_pos):
                     self.menu_page = MenuPages.MAIN_MENU
 

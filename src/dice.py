@@ -1,10 +1,25 @@
 import random
+import pygame
+import os
 
 
 class Dice:
-
     def __init__(self):
         self.throw = []
+
+    def draw_std(self, number: int, size_x, size_y):
+        """
+        Returns texture in chosen resolution for standard dice.
+        """
+        dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/std', f'{number}.svg')), (size_x, size_y))
+        return dice
+
+    def draw_spec(self,  number: int, size_x, size_y):
+        """
+        Returns texture in chosen resolution for special dice.
+        """
+        dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/spec', f'{number}.svg')), (size_x, size_y))
+        return dice
 
     def std_roll(self, num_throws: int):
         """
