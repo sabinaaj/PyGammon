@@ -1,4 +1,5 @@
 import pygame
+import game_board
 
 from constants import *
 from bar import *
@@ -41,7 +42,7 @@ class Game:
         while run:
             pygame.time.Clock().tick(FPS)
             # self.win.fill(BLACK)
-            game_board.draw()
+            self.game_board.draw(self.win)
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
