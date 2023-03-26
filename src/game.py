@@ -40,8 +40,8 @@ class Game:
 
         while run:
             pygame.time.Clock().tick(FPS)
-            self.win.fill(BLACK)
-
+            # self.win.fill(BLACK)
+            game_board.draw()
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
