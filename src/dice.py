@@ -11,6 +11,8 @@ class Dice:
         """
         Returns texture in chosen resolution for standard dice.
         """
+        # for i in range(900):
+        #     random_draw = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/std', f'{random.randint(1,6)}.svg')), (size_x, size_y))
         dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/std', f'{number}.svg')), (size_x, size_y))
         return dice
 
