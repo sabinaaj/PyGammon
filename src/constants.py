@@ -5,6 +5,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BONE_WHITE = (240, 240, 240)
 SAGE = (181, 181, 136)
+GRAY = (169, 169, 169)
 
 #game stone
 STONE_SIZE = 50

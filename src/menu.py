@@ -28,7 +28,6 @@ class Menu:
             draw_text(self.win, "An open-source Backgammon", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, HEIGHT / 5 + 10)
             draw_text(self.win, f"Build {self.build}", 15, "Inter-Medium", BLACK, WIDTH / 150, HEIGHT / 40, center=False)
 
-
             mouse_pos = pygame.mouse.get_pos()
 
             if self.menu_page == MenuPages.MAIN_MENU:
