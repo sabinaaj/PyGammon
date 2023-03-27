@@ -1,6 +1,7 @@
-import random
-import pygame
 import os
+import random
+
+import pygame
 
 
 class Dice:
@@ -13,14 +14,16 @@ class Dice:
         """
         # for i in range(900):
         #     random_draw = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/std', f'{random.randint(1,6)}.svg')), (size_x, size_y))
-        dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/std/PNG', f'{number}.png')), (size_x, size_y))
+        dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/std/PNG', f'{number}.png')),
+                                      (size_x, size_y))
         win.blit(dice, (x, y))
 
-    def draw_spec(self,  number: int, size_x, size_y):
+    def draw_spec(self, number: int, size_x, size_y):
         """
         Returns texture in chosen resolution for special dice.
         """
-        dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/spec', f'{number}.svg')), (size_x, size_y))
+        dice = pygame.transform.scale(pygame.image.load(os.path.join('../assets/dice/spec', f'{number}.svg')),
+                                      (size_x, size_y))
         return dice
 
     def std_roll(self, num_throws: int):

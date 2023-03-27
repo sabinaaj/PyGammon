@@ -1,5 +1,3 @@
-import pygame
-
 from bar import *
 from dice import *
 from game_board import *
@@ -18,7 +16,11 @@ class Game:
         self.roll = 0
 
         self.game_board = GameBoard()
+
         self.game_fields = []
+        for i in range(24):
+            self.game_fields.append(GameField(i))
+
         self.multiplayer = multiplayer
         self.console_player1 = ConsolePlayer(False)
         if self.multiplayer:
@@ -73,8 +75,6 @@ class Game:
                     if self.roll:
                         self.dice.std_roll(2)
                         self.roll -= 1
-
-
 
     # TODO Dopsat az bude urceno, jak jsou ukladany polohy kamenu.
     # def save_game(self):

@@ -1,5 +1,5 @@
-from abc import ABC
 import random
+from abc import ABC
 
 
 class Player(ABC):
@@ -23,4 +23,3 @@ class AIPlayer(Player):
         """
         choice = random.choice(avail_fields)
         return choice
-
