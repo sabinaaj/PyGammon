@@ -1,9 +1,12 @@
 from menu import *
+import pygame
+from constants import *
+from game import *
 
 pygame.init()
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Backgammon')
+pygame.display.set_caption('PyGammon')
 
 def draw_text(win, text, size, font, color, x, y, center = True):
     font = pygame.font.Font(f'../assets/fonts/Inter/{font}.ttf', size)
@@ -20,8 +23,10 @@ def draw_text(win, text, size, font, color, x, y, center = True):
 
 
 def main():
-    menu = Menu(WIN)
-    menu.menu_loop()
+    # menu = Menu(WIN)
+    # menu.menu_loop()
+    game = Game(WIN, False)
+    game.gameloop()
 
 
 if __name__ == '__main__':

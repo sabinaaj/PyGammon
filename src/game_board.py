@@ -1,4 +1,5 @@
 import pygame
+from main import draw_text
 from constants import *
 
 R_BOARD = pygame.image.load("../assets/board/1/R.png")
@@ -28,4 +29,10 @@ class GameBoard:
         background.blit(scaled_L_BOARD, (0, 0))
         background.blit(scaled_R_BOARD, (scaled_image_width, 0))
 
-        win.blit(background, (0, 0))
+        win.blit(background, (0, HEIGHT / 13))
+
+        self.draw_nums(win)
+    def draw_nums(self, win):
+        for i in range(6):
+            draw_text(win, f"{i + 13}", 20, "Inter-Regular", BLACK, 130 + i * 88, 20)
+            draw_text(win, f"{12 - i}", 20, "Inter-Regular", BONE_WHITE, 130 + i * 88, 50)

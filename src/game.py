@@ -1,13 +1,9 @@
-import pygame
-import game_board
-
-from constants import *
 from bar import *
 from dice import *
 from game_board import *
+from game_field import *
 from game_stone import *
 from player import *
-from game_field import *
 
 
 class Game:
@@ -41,7 +37,7 @@ class Game:
 
         while run:
             pygame.time.Clock().tick(FPS)
-            # self.win.fill(BLACK)
+            self.win.fill(SAGE)
             self.game_board.draw(self.win)
             pygame.display.update()
             for event in pygame.event.get():
