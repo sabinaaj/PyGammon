@@ -27,14 +27,14 @@ class Game:
             self.player2 = ConsolePlayer(True)
 
     def init_fields(self):
-        for i in range(12):
+        for i in range(6):
             self.game_fields.append(GameField(i, 113 + i * 87.3, 173, True))
-        # for i in range(12):
-        #     self.game_fields.append(GameField(i, 220 + i * 87.3, 173, True))
-        # for i in range(13, 25):
-        #     self.game_fields.append(GameField(i, 50 + (i-13) * 50, 600, False))
-        for i in range(13, 25):
-            self.game_fields.append(GameField(i, 50 + (i-13) * 50, 600, False))
+        for i in range(6, 12):
+            self.game_fields.append(GameField(i, 807.2 + (i-6) * 87.3, 173, True))
+        for i in range(12, 18):
+            self.game_fields.append(GameField(i, 113 + (i-12) * 87.3, 645, False))
+        for i in range(18, 24):
+            self.game_fields.append(GameField(i, 807.2 + (i-18) * 87.3, 645, False))
 
         #left_TOP
         for i in range(5):
@@ -60,9 +60,11 @@ class Game:
         for i in range(2):
             self.game_fields[23].add_stone(GameStone(23, self.player1))
 
-    def draw_roll_button(self, win):
-        roll_rect = pygame.draw.rect(win, GRAY, (WIDTH - 370, HEIGHT - 125, 130, 90))
-        draw_text(win, f"ROLL", 45, "Inter-Bold", BLACK, WIDTH - 305, HEIGHT - 80)
+    def draw_roll_button(self):
+        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
+        roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
+        self.win.blit(roll_button, (WIDTH - 370, HEIGHT - 125))
+        draw_text(self.win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
         return roll_rect
 
     def start_game(self):
@@ -91,7 +93,7 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
 
             self.draw()
-            roll_rect = self.draw_roll_button(self.win)
+            roll_rect = self.draw_roll_button()
 
             pygame.display.update()
 
