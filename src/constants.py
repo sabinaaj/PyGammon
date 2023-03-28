@@ -12,4 +12,4 @@ SAGE = (181, 181, 136)
 GRAY = (169, 169, 169)
 
 # game stone
-STONE_SIZE = 50
+STONE_SIZE = 40

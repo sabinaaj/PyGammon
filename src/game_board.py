@@ -64,4 +64,4 @@ class GameBoard:
     def draw_names(self, win, player1: str, player2: str, color_p1, color_p2):
         """Draws the player names."""
         draw_text(win, f"{player1}", 20, "Inter-Regular", color_p1, 70, 870)
-        draw_text(win, f"{player2}", 20, "Inter-Regular", color_p2, 70, 870)
+        draw_text(win, f"{player2}", 20, "Inter-Regular", color_p2, 70, 900)

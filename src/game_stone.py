@@ -11,8 +11,8 @@ W_STONE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board
 
 
 class GameStone:
-    def __init__(self, player):
-        self.position = []
+    def __init__(self, position, player):
+        self.position = [position]
         self.player = player
         self.color = player.color
         self.image = B_STONE if self.color else W_STONE

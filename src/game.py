@@ -2,7 +2,6 @@ from bar import *
 from dice import *
 from game_board import *
 from game_field import *
-from game_stone import *
 from player import *
 
 
@@ -18,19 +17,37 @@ class Game:
         self.game_board = GameBoard()
 
         self.game_fields = []
-        for i in range(24):
-            self.game_fields.append(GameField(i))
+
 
         self.multiplayer = multiplayer
-        self.console_player1 = ConsolePlayer(False)
+        self.player1 = ConsolePlayer(False)
         if self.multiplayer:
-            self.AI_player = AIPlayer(True)
+            self.player2 = AIPlayer(True)
         else:
-            self.console_player2 = ConsolePlayer(True)
+            self.player2 = ConsolePlayer(True)
 
     def init_fields(self):
-        for i in range(24):
-            self.game_fields.append(GameField(i))
+        for i in range(12):
+            self.game_fields.append(GameField(i, 50 + i * 50, 100, True))
+        for i in range(13, 25):
+            self.game_fields.append(GameField(i, 50 + (i-13) * 50, 600, False))
+
+        for i in range(5):
+            self.game_fields[0].add_stone(GameStone(0, self.player2))
+        for i in range(3):
+            self.game_fields[4].add_stone(GameStone(4, self.player1))
+        for i in range(5):
+            self.game_fields[6].add_stone(GameStone(6, self.player1))
+        for i in range(2):
+            self.game_fields[11].add_stone(GameStone(11, self.player2))
+        for i in range(5):
+            self.game_fields[12].add_stone(GameStone(12, self.player1))
+        for i in range(3):
+            self.game_fields[16].add_stone(GameStone(16, self.player2))
+        for i in range(5):
+            self.game_fields[18].add_stone(GameStone(18, self.player2))
+        for i in range(2):
+            self.game_fields[23].add_stone(GameStone(23, self.player1))
 
     def draw_roll_button(self, win):
         roll_rect = pygame.draw.rect(win, GRAY, (WIDTH - 370, HEIGHT - 125, 130, 90))
@@ -45,6 +62,9 @@ class Game:
 
         self.dice.draw_std(self.dice.throw[0], self.win, 90, 90, WIDTH - 220, HEIGHT - 125)
         self.dice.draw_std(self.dice.throw[1], self.win, 90, 90, WIDTH - 110, HEIGHT - 125)
+
+        for field in self.game_fields:
+            field.draw_stones(self.win)
 
     def gameloop(self):
         run = True
