@@ -1,4 +1,4 @@
-BUILD_NUM = "0005"
+BUILD_NUM = "0006"
 # Pri kazdem novem buildu prosim zvednout o 1
 # Diky -H
 

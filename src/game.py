@@ -28,22 +28,33 @@ class Game:
 
     def init_fields(self):
         for i in range(12):
-            self.game_fields.append(GameField(i, 50 + i * 50, 100, True))
+            self.game_fields.append(GameField(i, 113 + i * 87.3, 173, True))
+        # for i in range(12):
+        #     self.game_fields.append(GameField(i, 220 + i * 87.3, 173, True))
+        # for i in range(13, 25):
+        #     self.game_fields.append(GameField(i, 50 + (i-13) * 50, 600, False))
         for i in range(13, 25):
             self.game_fields.append(GameField(i, 50 + (i-13) * 50, 600, False))
 
+        #left_TOP
         for i in range(5):
             self.game_fields[0].add_stone(GameStone(0, self.player2))
         for i in range(3):
             self.game_fields[4].add_stone(GameStone(4, self.player1))
-        for i in range(5):
-            self.game_fields[6].add_stone(GameStone(6, self.player1))
-        for i in range(2):
-            self.game_fields[11].add_stone(GameStone(11, self.player2))
+
+        #left_BOT
         for i in range(5):
             self.game_fields[12].add_stone(GameStone(12, self.player1))
         for i in range(3):
             self.game_fields[16].add_stone(GameStone(16, self.player2))
+
+        #right_TOP
+        for i in range(5):
+            self.game_fields[6].add_stone(GameStone(6, self.player1))
+        for i in range(2):
+            self.game_fields[11].add_stone(GameStone(11, self.player2))
+
+        #right_BOT
         for i in range(5):
             self.game_fields[18].add_stone(GameStone(18, self.player2))
         for i in range(2):
