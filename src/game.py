@@ -117,12 +117,9 @@ class Game:
 
         self.start_game()
 
-        roll_dice = pygame.USEREVENT
-        pygame.time.set_timer(roll_dice, 100)
-
         while run:
             pygame.time.Clock().tick(FPS)
-            self.win.fill(SAGE)
+            self.win.fill((138, 161, 177))
             mouse_pos = pygame.mouse.get_pos()
 
             self.draw()
