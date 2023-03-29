@@ -1,4 +1,5 @@
 import pygame
+import os
 
 from constants import *
 
@@ -18,7 +19,7 @@ def draw_text(win, text, size, font, color, x, y, center=True):
     if center:
         text_rect.center = (x, y)
     else:
-        text_rect.bottomleft = (x, y)
+        text_rect.topleft = (x, y)
 
     win.blit(text_on_display, text_rect)
     return text_rect
@@ -26,42 +27,52 @@ def draw_text(win, text, size, font, color, x, y, center=True):
 
 class GameBoard:
 
-    def __init__(self):
-        # Jake ma plocha vlastnosti?
-        pass
+    def __init__(self, win):
+        self.win = win
 
-    def draw(self, win):
+    def draw(self):
         image_width, image_height = L_BOARD.get_size()
 
         scale_factor = min(WIDTH / (image_width * 2), HEIGHT / image_height)
         scaled_image_width = int(image_width * scale_factor)
         scaled_image_height = int(image_height * scale_factor)
-        scaled_L_BOARD = pygame.transform.scale(L_BOARD, (scaled_image_width, scaled_image_height))
-        scaled_R_BOARD = pygame.transform.scale(R_BOARD, (scaled_image_width, scaled_image_height))
+        scaled_l_board = pygame.transform.scale(L_BOARD, (scaled_image_width, scaled_image_height))
+        scaled_r_board = pygame.transform.scale(R_BOARD, (scaled_image_width, scaled_image_height))
 
         background = pygame.Surface((scaled_image_width * 2, scaled_image_height))
-        background.blit(scaled_L_BOARD, (0, 0))
-        background.blit(scaled_R_BOARD, (scaled_image_width, 0))
+        background.blit(scaled_l_board, (0, 0))
+        background.blit(scaled_r_board, (scaled_image_width, 0))
 
-        win.blit(background, (0, HEIGHT / 13))
+        self.win.blit(background, (0, HEIGHT / 13))
 
-        self.draw_nums(win)
-        self.draw_names(win, "Player 1", "Player 2", BLACK, BONE_WHITE)
+        self.draw_nums()
+        self.draw_names("Player 1", "Player 2", BLACK, BONE_WHITE)
+        self.draw_window()
 
-    def draw_nums(self, win):
+    def draw_nums(self):
         """Draws numbers around the game board."""
         for i in range(6):
-            draw_text(win, f"{i + 13}", 20, "Inter-Regular", BLACK, 130 + i * 88, 20)
-            draw_text(win, f"{12 - i}", 20, "Inter-Regular", BONE_WHITE, 130 + i * 88, 50)
-            draw_text(win, f"{i + 19}", 20, "Inter-Regular", BLACK, 830 + i * 88, 20)
-            draw_text(win, f"{6 - i}", 20, "Inter-Regular", BONE_WHITE, 830 + i * 88, 50)
+            draw_text(self.win, f"{i + 13}", 20, "Inter-Regular", BLACK, 130 + i * 88, 20)
+            draw_text(self.win, f"{12 - i}", 20, "Inter-Regular", BONE_WHITE, 130 + i * 88, 50)
+            draw_text(self.win, f"{i + 19}", 20, "Inter-Regular", BLACK, 830 + i * 88, 20)
+            draw_text(self.win, f"{6 - i}", 20, "Inter-Regular", BONE_WHITE, 830 + i * 88, 50)
 
-            draw_text(win, f"{i + 13}", 20, "Inter-Regular", BONE_WHITE, 130 + i * 88, 800)
-            draw_text(win, f"{12 - i}", 20, "Inter-Regular", BLACK, 130 + i * 88, 830)
-            draw_text(win, f"{i + 19}", 20, "Inter-Regular", BONE_WHITE, 830 + i * 88, 800)
-            draw_text(win, f"{6 - i}", 20, "Inter-Regular", BLACK, 830 + i * 88, 830)
+            draw_text(self.win, f"{i + 13}", 20, "Inter-Regular", BONE_WHITE, 130 + i * 88, 800)
+            draw_text(self.win, f"{12 - i}", 20, "Inter-Regular", BLACK, 130 + i * 88, 830)
+            draw_text(self.win, f"{i + 19}", 20, "Inter-Regular", BONE_WHITE, 830 + i * 88, 800)
+            draw_text(self.win, f"{6 - i}", 20, "Inter-Regular", BLACK, 830 + i * 88, 830)
 
-    def draw_names(self, win, player1: str, player2: str, color_p1, color_p2):
+    def draw_names(self, player1: str, player2: str, color_p1, color_p2):
         """Draws the player names."""
-        draw_text(win, f"{player1}", 20, "Inter-Regular", color_p1, 70, 870)
-        draw_text(win, f"{player2}", 20, "Inter-Regular", color_p2, 70, 900)
+        draw_text(self.win, f"{player1}", 30, "Inter-Regular", color_p1, 10, HEIGHT - 125, center=False)
+        draw_text(self.win, f"{player2}", 30, "Inter-Regular", color_p2, 10, HEIGHT - 75, center=False)
+
+    def draw_window(self):
+        pygame.draw.rect(self.win, FERN_GREEN, (WIDTH/2 - 300, HEIGHT - 125, 600, 90))
+
+    def draw_roll_button(self):
+        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
+        roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
+        self.win.blit(roll_button, (WIDTH - 370, HEIGHT - 125))
+        draw_text(self.win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
+        return roll_rect

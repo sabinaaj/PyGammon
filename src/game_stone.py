@@ -14,8 +14,8 @@ class GameStone:
     def __init__(self, position, player):
         self.position = [position]
         self.player = player
-        self.color = player.color
-        self.image = B_STONE if self.color else W_STONE
+        self.is_black = player.has_black_stones
+        self.image = B_STONE if self.is_black else W_STONE
 
     def draw(self, win, x, y):
         win.blit(self.image, (x, y))

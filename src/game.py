@@ -10,21 +10,22 @@ class Game:
         self.win = win
         self.bar = Bar()
 
-        self.dice = Dice()
         # number of rolls before dice stop
         self.roll = 0
+        self.dice = Dice()
 
-        self.game_board = GameBoard()
+        self.game_board = GameBoard(self.win)
 
         self.game_fields = []
 
-
+        # True - player1, False - player2
+        self.turn = True
         self.multiplayer = multiplayer
-        self.player1 = ConsolePlayer(False)
+        self.player1 = ConsolePlayer(False, "Player1")
         if self.multiplayer:
-            self.player2 = AIPlayer(True)
+            self.player2 = AIPlayer(True, "Player2")
         else:
-            self.player2 = ConsolePlayer(True)
+            self.player2 = ConsolePlayer(True, "Player2")
 
     def init_fields(self):
         for i in range(6):
@@ -36,42 +37,43 @@ class Game:
         for i in range(18, 24):
             self.game_fields.append(GameField(i, 807.2 + (i-18) * 87.3, 645, False))
 
-        #left_TOP
+        # left_TOP
         for i in range(5):
             self.game_fields[0].add_stone(GameStone(0, self.player2))
         for i in range(3):
             self.game_fields[4].add_stone(GameStone(4, self.player1))
 
-        #left_BOT
+        # left_BOT
         for i in range(5):
             self.game_fields[12].add_stone(GameStone(12, self.player1))
         for i in range(3):
             self.game_fields[16].add_stone(GameStone(16, self.player2))
 
-        #right_TOP
+        # right_TOP
         for i in range(5):
             self.game_fields[6].add_stone(GameStone(6, self.player1))
         for i in range(2):
             self.game_fields[11].add_stone(GameStone(11, self.player2))
 
-        #right_BOT
+        # right_BOT
         for i in range(5):
             self.game_fields[18].add_stone(GameStone(18, self.player2))
         for i in range(2):
             self.game_fields[23].add_stone(GameStone(23, self.player1))
 
-    def draw_roll_button(self):
-        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
-        roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
-        self.win.blit(roll_button, (WIDTH - 370, HEIGHT - 125))
-        draw_text(self.win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
-        return roll_rect
-
     def start_game(self):
         self.init_fields()
 
+    def turn(self):
+        # text, kdo je na tahu
+        # hod kostkou
+        # text, kdo co hodil
+        # pohyb kamenu
+        # konec kola
+        pass
+
     def draw(self):
-        self.game_board.draw(self.win)
+        self.game_board.draw()
 
         self.dice.draw_std(self.dice.throw[0], self.win, 90, 90, WIDTH - 220, HEIGHT - 125)
         self.dice.draw_std(self.dice.throw[1], self.win, 90, 90, WIDTH - 110, HEIGHT - 125)
@@ -93,7 +95,7 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
 
             self.draw()
-            roll_rect = self.draw_roll_button()
+            roll_rect = self.game_board.draw_roll_button()
 
             pygame.display.update()
 
