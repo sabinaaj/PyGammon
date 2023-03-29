@@ -34,10 +34,11 @@ class Game:
         self.player_turn = self.player1
 
     def init_fields(self):
+        # number of fields matches white numbering - 1
         for i in range(6):
-            self.game_fields.append(GameField(i, 113 + i * 87.3, 173, True))
+            self.game_fields.append(GameField(i, 1243.7 - i * 87.3, 173, True))
         for i in range(6, 12):
-            self.game_fields.append(GameField(i, 807.2 + (i-6) * 87.3, 173, True))
+            self.game_fields.append(GameField(i, 549.5 - (i-6) * 87.3, 173, True))
         for i in range(12, 18):
             self.game_fields.append(GameField(i, 113 + (i-12) * 87.3, 645, False))
         for i in range(18, 24):
@@ -45,9 +46,9 @@ class Game:
 
         # left_TOP
         for i in range(5):
-            self.game_fields[0].add_stone(GameStone(0, self.player2))
+            self.game_fields[11].add_stone(GameStone(11, self.player2))
         for i in range(3):
-            self.game_fields[4].add_stone(GameStone(4, self.player1))
+            self.game_fields[7].add_stone(GameStone(7, self.player1))
 
         # left_BOT
         for i in range(5):
@@ -57,9 +58,9 @@ class Game:
 
         # right_TOP
         for i in range(5):
-            self.game_fields[6].add_stone(GameStone(6, self.player1))
+            self.game_fields[5].add_stone(GameStone(5, self.player1))
         for i in range(2):
-            self.game_fields[11].add_stone(GameStone(11, self.player2))
+            self.game_fields[0].add_stone(GameStone(0, self.player2))
 
         # right_BOT
         for i in range(5):
