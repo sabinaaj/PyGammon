@@ -1,21 +1,21 @@
-from abc import ABC
 import random
+from abc import ABC
 
 
 class Player(ABC):
-    def __init__(self, color):
-        # black - True, white - False
-        self.color = color
+    def __init__(self, has_black_stones, name):
+        self.has_black_stones = has_black_stones
+        self.name = name
 
 
 class ConsolePlayer(Player):
-    def __init__(self, color):
-        super().__init__(color)
+    def __init__(self, has_black_stones, name):
+        super().__init__(has_black_stones, name)
 
 
 class AIPlayer(Player):
-    def __init__(self, color):
-        super().__init__(color)
+    def __init__(self, has_black_stones, name):
+        super().__init__(has_black_stones, name)
 
     def ai_choice(self, avail_fields: list):
         """
@@ -23,4 +23,3 @@ class AIPlayer(Player):
         """
         choice = random.choice(avail_fields)
         return choice
-
