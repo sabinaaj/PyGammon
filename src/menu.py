@@ -1,5 +1,3 @@
-from enum import Enum
-
 from game import *
 
 

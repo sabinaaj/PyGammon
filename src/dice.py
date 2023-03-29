@@ -34,6 +34,7 @@ class Dice:
         for i in range(num_throws):
             self.throw.append(random.randint(1, 6))
 
+
     def spec_roll(self):
         """
         Simulate rolling one user defined six-sided dice.
