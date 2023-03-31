@@ -1,4 +1,4 @@
-BUILD_NUM = "0.07e"
+BUILD_NUM = "0.07f"
 # Pri kazdem novem buildu prosim zvednout o 1 pismenko
 # Diky -H
 

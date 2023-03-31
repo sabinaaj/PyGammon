@@ -1,4 +1,5 @@
 from menu import *
+import pygame_gui
 
 pygame.init()
 

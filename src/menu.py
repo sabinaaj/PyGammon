@@ -1,4 +1,5 @@
 from game import *
+import pygame_gui
 
 
 class MenuPages(Enum):

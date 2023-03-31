@@ -6,6 +6,7 @@ from dice import *
 from game_board import *
 from game_field import *
 from player import *
+import pygame_gui
 
 
 class GameState(Enum):
