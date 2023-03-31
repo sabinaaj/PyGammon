@@ -16,6 +16,7 @@ class Menu:
 
     def menu_loop(self):
         run = True
+        manager = pygame_gui.UIManager((WIDTH, HEIGHT))
 
         while run:
             pygame.time.Clock().tick(FPS)
@@ -31,7 +32,7 @@ class Menu:
             elif self.menu_page == MenuPages.GAMEMODE_MENU:
                 run = self.gamemode_menu(mouse_pos)
             elif self.menu_page == MenuPages.SINGLEP_MENU:
-                run = self.singlep_menu(mouse_pos)
+                run = self.singlep_menu(mouse_pos, manager)
 
     def main_menu(self, mouse_pos):
         # Renders the main menu text
@@ -101,10 +102,22 @@ class Menu:
 
         return run
 
-    # def singlep_menu(self, mouse_pos):
-    #
-    #     run = True
-    #
+    def singlep_menu(self, mouse_pos, manager):
+        run = True
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+            manager.process_events(event)
+
+
+
+
+        return run
+
+
+
     #     base_font = pygame.font.Font(None, 32)
     #     user_text = ''
     #
@@ -143,9 +156,7 @@ class Menu:
     #                 else:
     #                     user_text += event.unicode
     #
-    #             if event.type == pygame.QUIT:
-    #                 run = False
-    #                 pygame.quit()
+    #
     #
     #         if active:
     #             color = color_active

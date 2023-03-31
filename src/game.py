@@ -1,4 +1,5 @@
 from enum import Enum
+import pygame_gui
 
 from bar import *
 from dice import *
@@ -143,6 +144,7 @@ class Game:
             field.draw_stones(self.win)
 
     def gameloop(self):
+        manager = pygame_gui.UIManager((WIDTH, HEIGHT))
         run = True
 
         self.init_game()
