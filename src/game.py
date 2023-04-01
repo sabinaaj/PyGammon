@@ -1,4 +1,6 @@
+import copy
 from enum import Enum
+
 import pygame_gui
 
 from bar import *
@@ -6,13 +8,11 @@ from dice import *
 from game_board import *
 from game_field import *
 from player import *
-import pygame_gui
 
 
 class GameState(Enum):
     ROLL_DICE = 0
     MOVE_STONE = 1
-    END_TURN = 2
 
 
 class Game:
@@ -20,15 +20,20 @@ class Game:
         self.win = win
         self.bar = Bar()
 
-        # number of rolls before dice stop
         self.button_pressed = False
+        # number of rolls before dice stop
         self.roll = 0
+        # Moves which player can do computed from values on dice
+        self.dice_move = []
+        self.same_number = False
         self.dice = Dice()
 
         self.game_board = GameBoard(self.win)
+        self.text = ""
 
         self.game_fields = []
-        self.avail_moves = []
+        self.avail_moves = {}
+        self.chosen_field = None
 
         self.game_state = GameState.ROLL_DICE
         self.multiplayer = multiplayer
@@ -85,42 +90,86 @@ class Game:
             self.move_stone_state()
 
     def roll_dice_state(self):
-        draw_text(self.win, f"{self.player_turn.name}", 20, "Inter-Regular", BLACK, WIDTH / 2 - 295, HEIGHT - 120,
-                  center=False)
+        self.text = f"{self.player_turn.name}"
 
         if self.button_pressed:
             if self.roll:
                 self.dice.std_roll(2)
                 self.roll -= 1
             else:
-                self.button_pressed = False
-                self.game_state = GameState.MOVE_STONE
+                self.stop_rolling()
+
+    def stop_rolling(self):
+        self.button_pressed = False
+
+        if self.dice.throw[0] == self.dice.throw[1]:
+            self.same_number = True
+            self.dice_move = [self.dice.throw[0], 2*self.dice.throw[0], 3*self.dice.throw[0], 4*self.dice.throw[0]]
+        else:
+            self.dice_move = copy.deepcopy(self.dice.throw)
+            self.dice_move.append(self.dice_move[0] + self.dice_move[1])
+
+        self.get_avail_moves()
+        self.game_state = GameState.MOVE_STONE
 
     def move_stone_state(self):
-        count = self.dice.throw[0] + self.dice.throw[1]
-        self.dice.throw.append(count)
         if self.dice.throw[0] == self.dice.throw[1]:
-            count = self.dice.throw[0] * 4
-            draw_text(self.win,
-                      f"{self.player_turn.name} rolled {self.dice.throw[0]}, {self.dice.throw[1]}, {self.dice.throw[0]}, {self.dice.throw[1]} or {count} in total.",
-                      20, "Inter-Regular", BLACK, WIDTH / 2 - 295, HEIGHT - 120, center=False)
+            self.text = f"{self.player_turn.name} rolled 4x{self.dice.throw[0]} or {self.dice.throw[0] + self.dice.throw[0]} in total."
         else:
-            draw_text(self.win,
-                      f"{self.player_turn.name} rolled {self.dice.throw[0]} and {self.dice.throw[1]} or {count} in total.",
-                      20, "Inter-Regular", BLACK, WIDTH / 2 - 295, HEIGHT - 120, center=False)
+            self.text = f"{self.player_turn.name} rolled {self.dice.throw[0]} and {self.dice.throw[1]} or {self.dice.throw[0] + self.dice.throw[1]} in total."
+
+    """
+    Gets available moves for every field where player has stones.
+    """
+    def get_avail_moves(self):
+        current_avail_moves = []
+        for field in self.player_turn.fields:
+            if not self.same_number:
+                if len(self.dice_move) == 3:
+                    current_avail_moves = self.get_current_avail_moves(field, self.dice_move[:2])
+                    if current_avail_moves[0] or current_avail_moves[1]:
+                        current_avail_moves += self.get_current_avail_moves(field, self.dice_move[2:])
+                    else:
+                        current_avail_moves.append(None)
+                else:
+                    current_avail_moves = self.get_current_avail_moves(field, self.dice_move[:1])
+
+            else:
+                current_avail_moves = self.get_current_avail_moves(field, self.dice_move)
+                is_none = False
+                for i, move in enumerate(current_avail_moves):
+                    if not move:
+                        is_none = True
+                    else:
+                        if is_none:
+                            current_avail_moves[i] = None
 
 
-    def get_avail_moves(self, field):
-        self.avail_moves = []
-        for throw in self.dice.throw:
+
+            print(current_avail_moves)
+            self.avail_moves[field] = current_avail_moves
+
+    """
+    Gets available moves for one field
+    """
+    def get_current_avail_moves(self, field, throw_list):
+        current_avail_moves = []
+
+        for throw in throw_list:
             field_num = self.get_valid_field_num(field.number, throw)
+
             if field_num:
                 avail_field = self.game_fields[field_num]
-                if avail_field.is_empty() or avail_field in self.player_turn.fields:
-                    self.avail_moves.append(avail_field)
+                if avail_field.has_1_or_0_stones() or avail_field in self.player_turn.fields:
+                    current_avail_moves.append(avail_field)
+                else:
+                    current_avail_moves.append(None)
+            else:
+                current_avail_moves.append(None)
+
+        return current_avail_moves
 
     def get_valid_field_num(self, start_number, throw):
-        field_num = -1
         if self.player_turn.has_black_stones:
             field_num = start_number - throw
         else:
@@ -131,18 +180,70 @@ class Game:
 
         return None
 
+    def move_stone(self, field, index):
+        stone = self.chosen_field.pop_stone()
+        if self.chosen_field.is_empty():
+            self.player_turn.fields.remove(self.chosen_field)
+
+        field.add_stone(stone)
+        if field not in self.player_turn.fields:
+            self.player_turn.fields.append(field)
+
+        self.chosen_field = None
+
+        if not self.same_number:
+            if index == 2:
+                self.game_state = GameState.ROLL_DICE
+                self.switch_player()
+                self.dice.used = [True, True]
+            else:
+                self.dice_move.pop(index)
+                self.dice.used[index] = True
+                if self.dice_move:
+                    self.dice_move.pop(-1)
+                else:
+                    self.game_state = GameState.ROLL_DICE
+                    self.switch_player()
+                    self.dice.used[0] = True
+                    self.dice.used[1] = True
+        else:
+            self.dice_move = self.dice_move[:((len(self.dice_move) - 1) - index)]
+            if len(self.dice_move) == 0:
+                self.game_state = GameState.ROLL_DICE
+                self.switch_player()
+                self.dice.used = [True, True]
+
+        self.get_avail_moves()
+
+    def switch_player(self):
+        if self.player_turn == self.player1:
+            self.player_turn = self.player2
+        else:
+            self.player_turn = self.player1
 
     def draw(self):
         self.game_board.draw()
 
-        self.dice.draw_std(self.dice.throw[0], self.win, 90, 90, WIDTH - 220, HEIGHT - 125)
-        self.dice.draw_std(self.dice.throw[1], self.win, 90, 90, WIDTH - 110, HEIGHT - 125)
+        if self.dice.throw[0]:
+            self.dice.draw(0, self.win, 90, 90, WIDTH - 220, HEIGHT - 125)
+        else:
+            self.dice.draw(0, self.win, 90, 90, WIDTH - 220, HEIGHT - 125)
 
-        for field in self.avail_moves:
-            field.glow(self.win)
+        if self.dice.throw[1]:
+            self.dice.draw(1, self.win, 90, 90, WIDTH - 110, HEIGHT - 125)
+        else:
+            self.dice.draw(1, self.win, 90, 90, WIDTH - 110, HEIGHT - 125)
+
+        if self.chosen_field:
+            for field in self.avail_moves[self.chosen_field]:
+                if field:
+                    field.glow(self.win)
 
         for field in self.game_fields:
             field.draw_stones(self.win)
+
+        draw_text(self.win, self.text, 20, "Inter-Regular", BLACK, WIDTH / 2 - 295, HEIGHT - 120,
+                  center=False)
 
     def gameloop(self):
         manager = pygame_gui.UIManager((WIDTH, HEIGHT))
@@ -169,12 +270,23 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if roll_rect.collidepoint(mouse_pos) and self.game_state == GameState.ROLL_DICE:
                         self.roll = random.randint(4, 8)
+                        self.dice.used = [False, False]
                         self.button_pressed = True
+
                     if self.game_state == GameState.MOVE_STONE:
+                        if self.chosen_field:
+                            for i, field in enumerate(self.avail_moves[self.chosen_field]):
+                                if field:
+                                    if field.rect.collidepoint(mouse_pos):
+                                        self.move_stone(field, i)
+                                        break
+
                         for field in self.player_turn.fields:
                             if field.rect.collidepoint(mouse_pos):
-                                self.get_avail_moves(field)
-                                self.game_state = GameState.ROLL_DICE
+                                if self.chosen_field == field:
+                                    self.chosen_field = None
+                                else:
+                                    self.chosen_field = field
 
     # TODO Dopsat az bude urceno, jak jsou ukladany polohy kamenu.
     # def save_game(self):

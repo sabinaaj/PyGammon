@@ -24,6 +24,9 @@ class GameField:
     def is_empty(self):
         return len(self.stones) == 0
 
+    def has_1_or_0_stones(self):
+        return len(self.stones) <= 1
+
     def draw_stones(self, win):
         for i, stone in enumerate(self.stones):
             if self.up:

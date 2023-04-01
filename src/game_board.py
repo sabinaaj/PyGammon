@@ -46,7 +46,7 @@ class GameBoard:
         self.win.blit(background, (0, HEIGHT / 13))
 
         self.draw_nums()
-        self.draw_names("Player 1", "Player 2", BLACK, BONE_WHITE)
+        self.draw_names("Player 1", "Player 2", BONE_WHITE, BLACK)
         self.draw_window()
 
     def draw_nums(self):
