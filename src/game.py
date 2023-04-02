@@ -270,7 +270,7 @@ class Game:
                   center=False)
 
     def gameloop(self):
-        manager = pygame_gui.UIManager((WIDTH, HEIGHT))
+        # manager = pygame_gui.UIManager((WIDTH, HEIGHT))
         run = True
 
         self.init_game()

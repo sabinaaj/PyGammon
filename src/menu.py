@@ -17,7 +17,7 @@ class Menu:
 
     def menu_loop(self):
         run = True
-        manager = pygame_gui.UIManager((WIDTH, HEIGHT))
+        manager_main = pygame_gui.UIManager((WIDTH, HEIGHT))
 
         while run:
             pygame.time.Clock().tick(FPS)
@@ -33,7 +33,7 @@ class Menu:
             elif self.menu_page == MenuPages.GAMEMODE_MENU:
                 run = self.gamemode_menu(mouse_pos)
             elif self.menu_page == MenuPages.SINGLEP_MENU:
-                run = self.singlep_menu(mouse_pos, manager)
+                run = self.singlep_menu(mouse_pos, manager_main)
 
     def main_menu(self, mouse_pos):
         # Renders the main menu text
@@ -105,11 +105,17 @@ class Menu:
 
     def singlep_menu(self, mouse_pos, manager):
         run = True
+        p1_text = draw_text(self.win, "Player 1 Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 380, center=False)
+        p2_text = draw_text(self.win, "Player 2 Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 465, center=False)
+
+        p1_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600,50)), manager = manager, object_id = '#player1_input')
+        p2_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 460), (600, 50)), manager = manager, object_id='#player2_input')
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
+
             manager.process_events(event)
 
 
