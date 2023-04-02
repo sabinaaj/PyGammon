@@ -118,7 +118,11 @@ class Menu:
 
             manager.process_events(event)
 
+        manager.update(FPS/1000)
 
+        manager.draw_ui(self.win)
+
+        pygame.display.update()
 
 
         return run

@@ -1,6 +1,8 @@
 from menu import *
 import pygame_gui
-
+#stale nevidim problem
+#jsem ted zmaten
+#co se stane po kliknuti na singleplayer?
 pygame.init()
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
