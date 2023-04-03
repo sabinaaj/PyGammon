@@ -32,6 +32,7 @@ class Game:
 
         self.game_board = GameBoard(self.win)
         self.text = ''
+        self.no_moves = False
 
         self.game_fields = []
         self.avail_moves = {}
@@ -84,6 +85,12 @@ class Game:
         self.player1.fields = [self.game_fields[5], self.game_fields[7], self.game_fields[12], self.game_fields[23]]
         self.player2.fields = [self.game_fields[0], self.game_fields[11], self.game_fields[16], self.game_fields[18]]
 
+        for field in self.game_fields:
+            if field.is_empty():
+                field.add_stone(GameStone(field.number, self.player1.has_black_stones))
+                field.add_stone(GameStone(field.number, self.player1.has_black_stones))
+                self.player1.fields.append(field)
+
     def turn(self):
         if self.game_state == GameState.ROLL_DICE:
             self.roll_dice_state()
@@ -96,7 +103,10 @@ class Game:
             self.move_stone_from_bar_state()
 
     def roll_dice_state(self):
-        self.text = f'{self.player_turn.name}'
+        if self.no_moves:
+            self.text = f"You had no available moves. It's {self.player_turn.name}'s turn."
+        else:
+            self.text = f"It's {self.player_turn.name}'s turn."
 
         if self.button_pressed:
             if self.roll:
@@ -140,6 +150,7 @@ class Game:
         if self.chosen_field == self.bar:
             self.bar.number = 24 if self.player_turn.has_black_stones else -1
 
+        self.no_moves = True
         current_avail_moves = []
         for field in self.player_turn.fields:
             if field == self.bar:
@@ -167,6 +178,9 @@ class Game:
 
             self.avail_moves[field] = current_avail_moves
 
+        if self.no_moves:
+            self.end_turn()
+
     def get_current_avail_moves(self, field, throw_list):
         '''
         Gets available moves for one field.
@@ -180,6 +194,7 @@ class Game:
                 avail_field = self.game_fields[field_num]
                 if avail_field.has_1_or_0_stones() or avail_field in self.player_turn.fields:
                     current_avail_moves.append(avail_field)
+                    self.no_moves = False
                 else:
                     current_avail_moves.append(None)
             else:
@@ -233,17 +248,21 @@ class Game:
                 self.dice.used[index] = True
                 if self.dice_move:
                     self.dice_move.pop(-1)
+                    self.get_avail_moves()
                 else:
                     self.end_turn()
         else:
-            self.dice_move = self.dice_move[:((len(self.dice_move) - 1) - index)]
             if len(self.dice_move) == 0:
                 self.end_turn()
+            else:
+                self.dice_move = self.dice_move[:((len(self.dice_move) - 1) - index)]
+                self.get_avail_moves()
 
-        self.get_avail_moves()
+
 
     def end_turn(self):
         self.game_state = GameState.ROLL_DICE
+        self.chosen_field = None
         self.dice.used = [True, True]
 
         if self.player_turn == self.player1:
