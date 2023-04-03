@@ -6,6 +6,7 @@ class Player(ABC):
     def __init__(self, has_black_stones, name):
         self.has_black_stones = has_black_stones
         self.name = name
+        self.fields = []
 
 
 class ConsolePlayer(Player):

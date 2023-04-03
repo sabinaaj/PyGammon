@@ -1,4 +1,4 @@
-BUILD_NUM = "0.07d"
+BUILD_NUM = "0.07h"
 # Pri kazdem novem buildu prosim zvednout o 1 pismenko
 # Diky -H
 
@@ -21,4 +21,8 @@ TICKLE_ME_PINK = (240, 140, 174)
 #NOVA BARVA PRO KAMENY #2F2D2E
 
 # game stone
-STONE_SIZE = 40
+STONE_SIZE = 50
+
+# game field
+FIELD_WIDTH = 50
+FIELD_HEIGHT = 213
