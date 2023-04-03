@@ -1,4 +1,4 @@
-BUILD_NUM = "0.07h"
+BUILD_NUM = "0.08arc"
 # Pri kazdem novem buildu prosim zvednout o 1 pismenko
 # Diky -H
 
@@ -17,6 +17,11 @@ OUTER_SPACE = (71, 78, 72)
 RAW_UMBER = (137, 111, 87)
 IVORY = (255, 255, 240)
 TICKLE_ME_PINK = (240, 140, 174)
+VAN_DYKE = (51, 44, 35)
+NIGHT = (15, 15, 15)
+SPACE_CADET = (34, 34, 59)
+FAWN = (230, 170, 104)
+TAN = (230, 192, 136)
 
 #NOVA BARVA PRO KAMENY #2F2D2E
 

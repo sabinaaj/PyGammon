@@ -1,6 +1,7 @@
 import copy
 from enum import Enum
 
+import pygame
 import pygame_gui
 
 from bar import *
@@ -130,7 +131,7 @@ class Game:
             self.text = f'{self.player_turn.name} rolled {self.dice.throw[0]} and {self.dice.throw[1]} or {self.dice.throw[0] + self.dice.throw[1]} in total.'
 
     def move_stone_from_bar_state(self):
-        draw_text(self.win, 'Stone on bar text(TO DO)', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
+        draw_text(self.win, 'Player has stones on bar.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
                   center=False)
 
     def get_avail_moves(self):
@@ -272,17 +273,17 @@ class Game:
     def gameloop(self):
         # manager = pygame_gui.UIManager((WIDTH, HEIGHT))
         run = True
+        show_menu = False
 
         self.init_game()
 
         while run:
             pygame.time.Clock().tick(FPS)
-            self.win.fill((138, 161, 177))
+            self.win.fill(FAWN)
             mouse_pos = pygame.mouse.get_pos()
 
             self.draw()
             roll_rect = self.game_board.draw_roll_button()
-            # save_rect = self.game_board.draw_save_button()
 
             self.turn()
 
@@ -292,13 +293,17 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        show_menu = not show_menu
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
+
                     if roll_rect.collidepoint(mouse_pos) and self.game_state == GameState.ROLL_DICE:
                         self.roll = random.randint(4, 8)
                         self.dice.used = [False, False]
                         self.button_pressed = True
-                    # if save_rect.collidepoint(mouse_pos):
-                    #     self.save_game()
 
                     if self.game_state == GameState.MOVE_STONE:
                         if self.chosen_field:
@@ -308,6 +313,7 @@ class Game:
                                         self.move_stone(field, i)
                                         break
 
+
                         for field in self.player_turn.fields:
                             if field.rect.collidepoint(mouse_pos) and self.chosen_field != self.bar:
                                 if self.chosen_field == field:
@@ -315,10 +321,21 @@ class Game:
                                 else:
                                     self.chosen_field = field
 
+
                     if self.game_state == GameState.MOVE_STONE_FROM_BAR and self.bar.rect.collidepoint(mouse_pos):
                         self.chosen_field = self.bar
                         self.get_avail_moves()
                         self.game_state = GameState.MOVE_STONE
+
+                    if show_menu:
+                        if save_rect.collidepoint(mouse_pos):
+                            self.save_game()
+
+                        if quit_rect.collidepoint(mouse_pos):
+                            run = False
+                            pygame.quit()
+
+
 
     # TODO Dopsat az bude urceno, jak jsou ukladany polohy kamenu.
     def save_game(self):
