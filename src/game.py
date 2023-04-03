@@ -287,6 +287,13 @@ class Game:
 
             self.turn()
 
+            if show_menu:
+                pygame.draw.rect(self.win, FAWN, [550, 200, 300, 450], 0)
+                save_rect = self.game_board.draw_save_button()
+                quit_rect = self.game_board.draw_exit_button()
+
+
+
             pygame.display.update()
 
             for event in pygame.event.get():

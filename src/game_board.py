@@ -70,6 +70,7 @@ class GameBoard:
     def draw_window(self):
         pygame.draw.rect(self.win, TAN, (WIDTH/2 - 300, HEIGHT - 125, 600, 90))
 
+    # TODO udelat z toho jednu funkci
     def draw_roll_button(self):
         roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
         roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
