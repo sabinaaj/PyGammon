@@ -30,7 +30,7 @@ class GameBoard:
     def __init__(self, win):
         self.win = win
 
-    def draw(self):
+    def draw(self, p1_name, p2_name):
         image_width, image_height = L_BOARD.get_size()
 
         scale_factor = min(WIDTH / (image_width * 2), HEIGHT / image_height)
@@ -46,7 +46,7 @@ class GameBoard:
         self.win.blit(background, (0, HEIGHT / 13))
 
         self.draw_nums()
-        self.draw_names("Player 1", "Player 2", BONE_WHITE, BLACK)
+        self.draw_names(f"{p1_name}", f"{p2_name}", BONE_WHITE, BLACK)
         self.draw_window()
 
     def draw_nums(self):
@@ -75,4 +75,11 @@ class GameBoard:
         roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
         self.win.blit(roll_button, (WIDTH - 370, HEIGHT - 125))
         draw_text(self.win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
+        return roll_rect
+
+    def draw_save_button(self):
+        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
+        roll_rect = roll_button.get_rect(topleft=(WIDTH - 270, HEIGHT - 125))
+        self.win.blit(roll_button, (WIDTH - 270, HEIGHT - 125))
+        draw_text(self.win, "Save", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
         return roll_rect
