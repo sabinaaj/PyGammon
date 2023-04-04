@@ -201,6 +201,10 @@ class Game:
             else:
                 current_avail_moves.append(None)
 
+
+        if not current_avail_moves:
+            self.no_moves = False
+
         return current_avail_moves
 
     def get_valid_field_num(self, start_number, throw):
@@ -277,7 +281,7 @@ class Game:
         self.dice.draw(0, self.win, 90, 90, WIDTH - 220, HEIGHT - 125)
         self.dice.draw(1, self.win, 90, 90, WIDTH - 110, HEIGHT - 125)
 
-        if self.chosen_field:
+        if self.chosen_field and self.game_state != GameState.ROLL_DICE:
             for field in self.avail_moves[self.chosen_field]:
                 if field:
                     field.glow(self.win)
