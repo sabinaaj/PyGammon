@@ -1,5 +1,6 @@
-import pygame
 import os
+
+import pygame
 
 from constants import *
 
@@ -68,7 +69,7 @@ class GameBoard:
         draw_text(self.win, f"{player2}", 30, "Inter-Regular", color_p2, 10, HEIGHT - 75, center=False)
 
     def draw_window(self):
-        pygame.draw.rect(self.win, TAN, (WIDTH/2 - 300, HEIGHT - 125, 600, 90))
+        pygame.draw.rect(self.win, TAN, (WIDTH / 2 - 300, HEIGHT - 125, 600, 90))
 
     # TODO udelat z toho jednu funkci
     def draw_roll_button(self):
