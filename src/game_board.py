@@ -68,8 +68,9 @@ class GameBoard:
         draw_text(self.win, f"{player2}", 30, "Inter-Regular", color_p2, 10, HEIGHT - 75, center=False)
 
     def draw_window(self):
-        pygame.draw.rect(self.win, FERN_GREEN, (WIDTH/2 - 300, HEIGHT - 125, 600, 90))
+        pygame.draw.rect(self.win, TAN, (WIDTH/2 - 300, HEIGHT - 125, 600, 90))
 
+    # TODO udelat z toho jednu funkci
     def draw_roll_button(self):
         roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
         roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
@@ -79,7 +80,14 @@ class GameBoard:
 
     def draw_save_button(self):
         roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
-        roll_rect = roll_button.get_rect(topleft=(WIDTH - 270, HEIGHT - 125))
-        self.win.blit(roll_button, (WIDTH - 270, HEIGHT - 125))
-        draw_text(self.win, "Save", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
+        roll_rect = roll_button.get_rect(topleft=(635, 325))
+        self.win.blit(roll_button, (635, 325))
+        draw_text(self.win, "Save", 45, "Inter-Regular", BONE_WHITE, 700, 367)
+        return roll_rect
+
+    def draw_exit_button(self):
+        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg_red.png'))
+        roll_rect = roll_button.get_rect(topleft=(635, 425))
+        self.win.blit(roll_button, (635, 425))
+        draw_text(self.win, "Quit", 45, "Inter-Regular", BONE_WHITE, 700, 467)
         return roll_rect
