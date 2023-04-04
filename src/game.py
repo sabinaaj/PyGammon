@@ -1,9 +1,6 @@
 import copy
 from enum import Enum
 
-import pygame
-import pygame_gui
-
 from bar import *
 from dice import *
 from game_board import *
@@ -145,9 +142,9 @@ class Game:
                   center=False)
 
     def get_avail_moves(self):
-        '''
+        """
         Gets available moves for every field where player has stones.
-        '''
+        """
         if self.chosen_field == self.bar:
             self.bar.number = 24 if self.player_turn.has_black_stones else -1
 
@@ -183,9 +180,9 @@ class Game:
             self.end_turn()
 
     def get_current_avail_moves(self, field, throw_list):
-        '''
+        """
         Gets available moves for one field.
-        '''
+        """
         current_avail_moves = []
 
         for throw in throw_list:
@@ -219,9 +216,9 @@ class Game:
         return None
 
     def move_stone(self, end_field, index):
-        '''
+        """
         Moves stone from one field to another.
-        '''
+        """
         stone = self.chosen_field.pop_stone()
         if self.chosen_field.is_empty():
             self.player_turn.fields.remove(self.chosen_field)
@@ -315,8 +312,6 @@ class Game:
                 save_rect = self.game_board.draw_save_button()
                 quit_rect = self.game_board.draw_exit_button()
 
-
-
             pygame.display.update()
 
             for event in pygame.event.get():
@@ -343,14 +338,12 @@ class Game:
                                         self.move_stone(field, i)
                                         break
 
-
                         for field in self.player_turn.fields:
                             if field.rect.collidepoint(mouse_pos) and self.chosen_field != self.bar:
                                 if self.chosen_field == field:
                                     self.chosen_field = None
                                 else:
                                     self.chosen_field = field
-
 
                     if self.game_state == GameState.MOVE_STONE_FROM_BAR and self.bar.rect.collidepoint(mouse_pos):
                         self.chosen_field = self.bar
@@ -365,10 +358,12 @@ class Game:
                             run = False
                             pygame.quit()
 
-
-
     # TODO Dopsat az bude urceno, jak jsou ukladany polohy kamenu.
+
     def save_game(self):
-        file = open('../save.json', 'w')
-        for field in self.game_fields:
-            file.write(str(field.stones))
+        with open('../save.json', 'w') as file:
+            for field in self.game_fields:
+                stones = []
+                for stone in field.stones:
+                    stones.append(f'{stone.position}, {stone.is_black}')
+                file.write(str(stones))

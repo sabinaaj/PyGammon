@@ -25,7 +25,7 @@ class Menu:
                                                     manager=manager_main, object_id='#player1_input')
 
         p2_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 460), (600, 50)),
-                                                        manager=manager_main, object_id='#player2_input')
+                                                    manager=manager_main, object_id='#player2_input')
 
         pm_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600, 50)),
                                                     manager=manager_multi, object_id='#player1_input')
@@ -125,9 +125,9 @@ class Menu:
         if play_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, 545))
 
-
-
-
+        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 580, center=False)
+        if back_rect.collidepoint(mouse_pos):
+            self.win.blit(self.triangle, (WIDTH / 3 - 30, 585))
 
         manager.update(pygame.time.Clock().tick(60) / 1000)
 
@@ -151,11 +151,12 @@ class Menu:
                     game = Game(self.win, False, p1_name, p2_name)
                     game.gameloop()
 
+                if back_rect.collidepoint(mouse_pos):
+                    self.menu_page = MenuPages.GAMEMODE_MENU
+
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
-
-
 
         return run, p1_name, p2_name
 
@@ -163,8 +164,11 @@ class Menu:
         run = True
         p1_text = draw_text(self.win, "Player Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 380, center=False)
 
-
         play_rect = draw_text(self.win, "Play", 30, "Inter-Bold", BLACK, WIDTH / 3, 465, center=False)
+
+        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 510, center=False)
+        if back_rect.collidepoint(mouse_pos):
+            self.win.blit(self.triangle, (WIDTH / 3 - 30, 515))
 
         if play_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, 470))
@@ -173,7 +177,7 @@ class Menu:
 
         manager.draw_ui(self.win)
 
-        #funguje, nesahat, neukazovat u zkousky
+        # funguje, nesahat, neukazovat u zkousky
 
         # hotfix = pygame.draw.rect(self.win, WHITE, (WIDTH / 3, 460, 600, 50))
 
@@ -191,6 +195,9 @@ class Menu:
                 if play_rect.collidepoint(mouse_pos):
                     game = Game(self.win, False, p1_name, 'AI')
                     game.gameloop()
+
+                if back_rect.collidepoint(mouse_pos):
+                    self.menu_page = MenuPages.GAMEMODE_MENU
 
             if event.type == pygame.QUIT:
                 run = False

@@ -14,10 +14,13 @@ class Dice:
         Returns texture in chosen resolution for standard dice.
         """
         if self.used[number]:
-            dice = pygame.transform.scale(pygame.image.load(os.path.join(f'../assets/dice/gray', f'{self.throw[number]}.png')),
-                                      (size_x, size_y))
+            dice = pygame.transform.scale(pygame.image.load(os.path.join(f'../assets/dice/gray', f'{self.throw[number]}'
+                                                                                                 f'.png')),
+                                          (size_x, size_y))
         else:
-            dice = pygame.transform.scale(pygame.image.load(os.path.join(f'../assets/dice/white', f'{self.throw[number]}.png')),
+            dice = pygame.transform.scale(pygame.image.load(os.path.join(f'../assets/dice/white', f'{self.throw[number]}'
+                                                                                                            
+                                                                                                  f'.png')),
                                           (size_x, size_y))
         win.blit(dice, (x, y))
 
