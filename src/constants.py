@@ -1,5 +1,5 @@
-BUILD_NUM = "0.08arc"
-# Pri kazdem novem buildu prosim zvednout o 1 pismenko
+BUILD_NUM = "0.08b"
+# Pri kazdem novem buildu prosim bumpnout o 1 pismenko
 # Diky -H
 
 WIDTH, HEIGHT = 1400, 1000
@@ -23,7 +23,7 @@ SPACE_CADET = (34, 34, 59)
 FAWN = (230, 170, 104)
 TAN = (230, 192, 136)
 
-#NOVA BARVA PRO KAMENY #2F2D2E
+# NOVA BARVA PRO KAMENY #2F2D2E
 
 # game stone
 STONE_SIZE = 50

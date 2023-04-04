@@ -1,8 +1,12 @@
 from game_stone import *
 
 
-GLOW_UP = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board/1', 'L_TOP_GLOW.png')), (FIELD_WIDTH, FIELD_HEIGHT))
-GLOW_DOWN = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board/1', 'L_BOT_GLOW.png')), (FIELD_WIDTH, FIELD_HEIGHT))
+GLOW_UP = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board/1', 'L_TOP_GLOW.png')), (FIELD_WIDTH,
+                                                                                                          FIELD_HEIGHT))
+GLOW_DOWN = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board/1', 'L_BOT_GLOW.png')), (FIELD_WIDTH,
+                                                                                                            FIELD_HEIGHT
+                                                                                                            ))
+
 
 class GameField:
 
@@ -41,4 +45,4 @@ class GameField:
         if self.up:
             win.blit(GLOW_UP, (self.x, self.y))
         else:
-            win.blit(GLOW_DOWN, (self.x , self.y))
+            win.blit(GLOW_DOWN, (self.x, self.y))
