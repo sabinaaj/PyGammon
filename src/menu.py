@@ -122,13 +122,13 @@ class Menu:
         p1_text = draw_text(self.win, "Player 1 Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 380, center=False)
         p2_text = draw_text(self.win, "Player 2 Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 465, center=False)
 
-        play_rect = draw_text(self.win, "Play", 30, "Inter-Bold", BLACK, WIDTH / 3, 540, center=False)
+        play_rect = draw_text(self.win, "PLAY", 30, "Inter-Bold", BLACK, WIDTH / 3, 540, center=False)
         if play_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, 545))
 
-        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 580, center=False)
+        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 620, center=False)
         if back_rect.collidepoint(mouse_pos):
-            self.win.blit(self.triangle, (WIDTH / 3 - 30, 585))
+            self.win.blit(self.triangle, (WIDTH / 3 - 30, 625))
 
         manager.update(pygame.time.Clock().tick(60) / 1000)
 
@@ -165,11 +165,11 @@ class Menu:
         run = True
         p1_text = draw_text(self.win, "Player Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 380, center=False)
 
-        play_rect = draw_text(self.win, "Play", 30, "Inter-Bold", BLACK, WIDTH / 3, 465, center=False)
+        play_rect = draw_text(self.win, "PLAY", 30, "Inter-Bold", BLACK, WIDTH / 3, 465, center=False)
 
-        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 510, center=False)
+        back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 550, center=False)
         if back_rect.collidepoint(mouse_pos):
-            self.win.blit(self.triangle, (WIDTH / 3 - 30, 515))
+            self.win.blit(self.triangle, (WIDTH / 3 - 30, 555))
 
         if play_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, 470))
