@@ -1,4 +1,5 @@
 import copy
+import threading
 from enum import Enum
 
 from bar import *
@@ -40,6 +41,7 @@ class Game:
         self.no_moves = False
 
         self.game_fields = []
+        self.end_fields = []
         self.avail_moves = {}
         self.chosen_field = None
 
@@ -47,10 +49,11 @@ class Game:
         self.multiplayer = multiplayer
         self.player1 = ConsolePlayer(has_black_stones=False, name=f'{p1_name}')
         if self.multiplayer:
-            self.player2 = AIPlayer(has_black_stones=True, name='AI')
-        else:
             self.player2 = ConsolePlayer(has_black_stones=True, name=f'{p2_name}')
+        else:
+            self.player2 = AIPlayer(has_black_stones=True, name='AI')
         self.player_turn = self.player1
+        self.AIturn = False
 
     def init_game(self):
         # number of fields matches white numbering - 1
@@ -66,9 +69,12 @@ class Game:
         for field in STONES_INIT:
             for i in range(field[1]):
                 self.game_fields[field[0]].add_stone(GameStone(field[0], field[2]))
-
-        self.player1.fields = [self.game_fields[5], self.game_fields[7], self.game_fields[12], self.game_fields[23]]
-        self.player2.fields = [self.game_fields[0], self.game_fields[11], self.game_fields[16], self.game_fields[18]]
+                if field[2]:  # player has black stones
+                    if self.game_fields[field[0]] not in self.player2.fields:
+                        self.player2.fields.append(self.game_fields[field[0]])
+                else:
+                    if self.game_fields[field[0]] not in self.player1.fields:
+                        self.player1.fields.append(self.game_fields[field[0]])
 
     def turn(self):
         if self.game_state == GameState.ROLL_DICE:
@@ -80,6 +86,15 @@ class Game:
         if self.game_state == GameState.MOVE_STONE_FROM_BAR:
             self.move_stone_state()
             self.move_stone_from_bar_state()
+
+    def ai_turn(self):
+        while self.game_state != GameState.ROLL_DICE:
+            field = None
+            index = 0
+            while field is None:
+                self.chosen_field, index = self.player2.ai_choice(self.player2.fields)
+                field, index = self.player2.ai_choice(self.avail_moves[self.chosen_field])
+            self.move_stone(field, index)
 
     """
     Roll dice
@@ -116,6 +131,10 @@ class Game:
         else:
             self.game_state = GameState.MOVE_STONE
 
+        if self.AIturn:
+            self.ai_turn()
+
+
     def roll_button_clicked(self):
         self.roll = random.randint(4, 8)
         self.dice.used = [False, False]
@@ -145,6 +164,7 @@ class Game:
             self.bar.number = 24 if self.player_turn.has_black_stones else -1
 
         self.no_moves = True
+        print("------")
 
         for field in self.player_turn.fields:
             if field == self.bar:
@@ -171,7 +191,9 @@ class Game:
                             current_avail_moves[i] = None
 
             self.avail_moves[field] = current_avail_moves
+            print(current_avail_moves)
 
+        print(f"no_moves: {self.no_moves}")
         if self.no_moves:
             self.end_turn()
 
@@ -184,7 +206,7 @@ class Game:
         for throw in throw_list:
             field_num = self.get_valid_field_num(field.number, throw)
 
-            if field_num:
+            if field_num is not None:
                 avail_field = self.game_fields[field_num]
                 if avail_field.has_1_or_0_stones() or avail_field in self.player_turn.fields:
                     current_avail_moves.append(avail_field)
@@ -204,8 +226,9 @@ class Game:
             field_num = start_number - throw
         else:
             field_num = start_number + throw
+        print(field_num + 1, end=", ")
 
-        if 0 <= field_num < 24:
+        if -1 < field_num < 24:
             return field_num
 
         return None
@@ -249,10 +272,10 @@ class Game:
                 else:
                     self.end_turn()
         else:
+            self.dice_move = self.dice_move[:((len(self.dice_move) - 1) - index)]
             if len(self.dice_move) == 0:
                 self.end_turn()
             else:
-                self.dice_move = self.dice_move[:((len(self.dice_move) - 1) - index)]
                 self.get_avail_moves()
 
     def game_fields_clicked(self, mouse_pos):
@@ -275,6 +298,16 @@ class Game:
         self.get_avail_moves()
         self.game_state = GameState.MOVE_STONE
 
+    def can_bear_off(self):
+        for field in self.player_turn.fields:
+            if self.player_turn.has_black_stones and field.number > 5:
+                return
+            if not self.player_turn.has_black_stones and field.number < 18:
+                return
+
+        draw_text(self.win, 'Can go away.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
+                  center=False)
+
     """
     End turn
     """
@@ -286,8 +319,13 @@ class Game:
 
         if self.player_turn == self.player1:
             self.player_turn = self.player2
+            if not self.multiplayer:
+                self.AIturn = True
+                self.roll_button_clicked()
         else:
             self.player_turn = self.player1
+            if not self.multiplayer:
+                self.AIturn = False
 
     def draw(self):
         self.game_board.draw(self.player1.name, self.player2.name)
@@ -323,6 +361,8 @@ class Game:
 
             self.turn()
 
+            self.can_bear_off()
+
             if show_menu:
                 pygame.draw.rect(self.win, FAWN, [550, 200, 300, 450], 0)
                 save_rect = self.game_board.draw_save_button()
@@ -339,7 +379,7 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         show_menu = not show_menu
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and not self.AIturn:
 
                     if roll_rect.collidepoint(mouse_pos) and self.game_state == GameState.ROLL_DICE:
                         self.roll_button_clicked()
