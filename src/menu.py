@@ -150,7 +150,7 @@ class Menu:
 
                 if play_rect.collidepoint(mouse_pos):
                     run = False
-                    game = Game(self.win, False, p1_name, p2_name)
+                    game = Game(self.win, True, p1_name, p2_name)
                     game.gameloop()
 
                 if back_rect.collidepoint(mouse_pos):
