@@ -1,5 +1,6 @@
 import copy
 from enum import Enum
+import json
 
 from bar import *
 from dice import *
@@ -54,6 +55,14 @@ class Game:
 
     def init_game(self):
         # number of fields matches white numbering - 1
+        for field in STONES_INIT:
+            for i in range(field[1]):
+                self.game_fields[field[0]].add_stone(GameStone([field[0]], field[2]))
+
+        self.player1.fields = [self.game_fields[5], self.game_fields[7], self.game_fields[12], self.game_fields[23]]
+        self.player2.fields = [self.game_fields[0], self.game_fields[11], self.game_fields[16], self.game_fields[18]]
+
+    def init_fields(self):
         for i in range(6):
             self.game_fields.append(GameField(i, 1243.7 - i * 86.5, 167, True))
         for i in range(6, 12):
@@ -62,13 +71,6 @@ class Game:
             self.game_fields.append(GameField(i, 113 + (i - 12) * 86.5, 480, False))
         for i in range(18, 24):
             self.game_fields.append(GameField(i, 807.2 + (i - 18) * 86.5, 480, False))
-
-        for field in STONES_INIT:
-            for i in range(field[1]):
-                self.game_fields[field[0]].add_stone(GameStone(field[0], field[2]))
-
-        self.player1.fields = [self.game_fields[5], self.game_fields[7], self.game_fields[12], self.game_fields[23]]
-        self.player2.fields = [self.game_fields[0], self.game_fields[11], self.game_fields[16], self.game_fields[18]]
 
     def turn(self):
         if self.game_state == GameState.ROLL_DICE:
@@ -307,11 +309,15 @@ class Game:
         draw_text(self.win, self.text, 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 120,
                   center=False)
 
-    def gameloop(self):
+    def gameloop(self, load = False):
         run = True
         show_menu = False
+        self.init_fields()
 
-        self.init_game()
+        if load:
+            self.load_game()
+        else:
+            self.init_game()
 
         while run:
             pygame.time.Clock().tick(FPS)
@@ -358,12 +364,51 @@ class Game:
                             run = False
                             pygame.quit()
 
-    # TODO Dopsat az bude urceno, jak jsou ukladany polohy kamenu.
+    def format_for_save(self):
+        '''Function to format self.game_fields for saving'''
+
+        data = {}
+
+        data["game_fields"] = []
+        for field in self.game_fields:
+            stones = []
+            for stone in field.stones:
+                if stone.is_black:
+                    color = "Black"
+                else:
+                    color = "White"
+                stones.append({
+                    "position": stone.position,
+                    "color": color,
+                })
+            data["game_fields"].append({
+                "number": field.number,
+                "stones": stones,
+            })
+
+        return data
 
     def save_game(self):
-        with open('../save.json', 'w') as file:
-            for field in self.game_fields:
-                stones = []
-                for stone in field.stones:
-                    stones.append(f'{stone.position}, {stone.is_black}')
-                file.write(str(stones))
+        '''Function to save game'''
+        data = self.format_for_save()
+        with open("../save.json", "w") as outfile:
+            json.dump(data, outfile)
+            # outfile.write(str(data))
+
+    def load_game(self):
+        '''Function to load game'''
+        with open("../save.json") as json_file:
+            data = json.load(json_file)
+
+        for field in data["game_fields"]:
+            is_black = False
+            for stone in field["stones"]:
+                if stone["color"] == "Black":
+                    is_black = True
+                else:
+                    is_black = False
+                self.game_fields[field["number"]].add_stone(GameStone(stone["position"], is_black))
+            if is_black:
+                self.player2.fields.append(self.game_fields[field["number"]])
+            else:
+                self.player1.fields.append(self.game_fields[field["number"]])
