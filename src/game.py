@@ -366,7 +366,7 @@ class Game:
 
     def format_for_save(self):
         '''Function to format self.game_fields for saving'''
-
+        #TODO add /n to make the json human-readable.
         data = {}
 
         data["game_fields"] = []
