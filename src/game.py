@@ -309,7 +309,7 @@ class Game:
         draw_text(self.win, self.text, 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 120,
                   center=False)
 
-    def gameloop(self, load = False):
+    def gameloop(self, load=False):
         run = True
         show_menu = False
         self.init_fields()
@@ -331,7 +331,7 @@ class Game:
 
             if show_menu:
                 pygame.draw.rect(self.win, FAWN, [550, 200, 300, 450], 0)
-                save_rect = self.game_board.draw_save_button()
+                save_rect = self.game_board.draw_save_button(False)
                 quit_rect = self.game_board.draw_exit_button()
 
             pygame.display.update()
@@ -365,11 +365,28 @@ class Game:
                             pygame.quit()
 
     def format_for_save(self):
-        '''Function to format self.game_fields for saving'''
-        #TODO add /n to make the json human-readable.
         data = {}
-
         data["game_fields"] = []
+        data["player_names"] = []
+        data["dice"] = []
+        data["player_turn"] = self.player_turn.name
+        data["bar"] = []
+        data["game_state"] = self.game_state.name
+        data["same_number"] = self.same_number
+        print(self.dice_move)
+
+        avail_moves_dict = {}
+        for key, value in self.avail_moves.items():
+            print(type(key.number), value)
+            avail_moves_dict[key.number] = [field.number if field else None for field in value]
+        data["avail_moves_dict"] = avail_moves_dict
+        data["dice_move"] = self.dice_move
+        data["dice_used"] = self.dice.used
+        data["player_names"].append({
+            "player1": str(self.player1.name),
+            "player2": str(self.player2.name),
+        })
+
         for field in self.game_fields:
             stones = []
             for stone in field.stones:
@@ -381,24 +398,51 @@ class Game:
                     "position": stone.position,
                     "color": color,
                 })
+
             data["game_fields"].append({
                 "number": field.number,
                 "stones": stones,
             })
 
+        for stone in self.bar.stones:
+            if stone.is_black:
+                color = "Black"
+            else:
+                color = "White"
+            data["bar"].append({
+                "position": stone.position,
+                "color": color,
+            })
+
         return data
 
     def save_game(self):
-        '''Function to save game'''
         data = self.format_for_save()
         with open("../save.json", "w") as outfile:
             json.dump(data, outfile)
             # outfile.write(str(data))
 
     def load_game(self):
-        '''Function to load game'''
         with open("../save.json") as json_file:
             data = json.load(json_file)
+
+            self.player1.name = data["player_names"][0]["player1"]
+            self.player2.name = data["player_names"][0]["player2"]
+            self.same_number = data["same_number"]
+            self.game_state = GameState[data["game_state"]]
+            self.dice_move = data["dice_move"]
+            self.dice.used = data["dice_used"]
+            self.bar.stones = [GameStone(stone["position"], stone["color"]) for stone in data["bar"]]
+
+            for field_key in data["avail_moves_dict"]:
+                self.avail_moves[self.game_fields[int(field_key)]] = []
+                for field in data["avail_moves_dict"][field_key]:
+                    self.avail_moves[self.game_fields[int(field_key)]].append(self.game_fields[int(field)] if field else None)
+
+        if data["player_turn"] == self.player1.name:
+            self.player_turn = self.player1
+        else:
+            self.player_turn = self.player2
 
         for field in data["game_fields"]:
             is_black = False
@@ -412,3 +456,10 @@ class Game:
                 self.player2.fields.append(self.game_fields[field["number"]])
             else:
                 self.player1.fields.append(self.game_fields[field["number"]])
+
+        for stone in data["bar"]:
+            if stone["color"] == "Black":
+                is_black = True
+            else:
+                is_black = False
+            self.bar.add_stone(GameStone(stone["position"], is_black))
