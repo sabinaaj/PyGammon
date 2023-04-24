@@ -2,6 +2,7 @@ import random
 from abc import ABC
 
 
+
 class Player(ABC):
     def __init__(self, has_black_stones, name):
         self.has_black_stones = has_black_stones
@@ -22,5 +23,6 @@ class AIPlayer(Player):
         """
         Input is list, returns the field AI player chose.
         """
-        choice = random.choice(avail_fields)
-        return choice
+        choice = random.choice(range(len(avail_fields)))
+        return avail_fields[choice], choice
+

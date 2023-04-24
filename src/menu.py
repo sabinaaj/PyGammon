@@ -20,16 +20,16 @@ class Menu:
 
     def menu_loop(self):
         run = True
-        manager_main = pygame_gui.UIManager((WIDTH, HEIGHT))
         manager_multi = pygame_gui.UIManager((WIDTH, HEIGHT))
+        manager_single = pygame_gui.UIManager((WIDTH, HEIGHT))
         p1_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600, 50)),
-                                                    manager=manager_main, object_id='#player1_input')
+                                                    manager=manager_multi, object_id='#player1_input')
 
         p2_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 460), (600, 50)),
-                                                    manager=manager_main, object_id='#player2_input')
+                                                    manager=manager_multi, object_id='#player2_input')
 
-        pm_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600, 50)),
-                                                    manager=manager_multi, object_id='#player1_input')
+        ps_in = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600, 50)),
+                                                    manager=manager_single, object_id='#player1_input')
         p1_name = 'Player 1'
         p2_name = 'Player 2'
 
@@ -47,9 +47,9 @@ class Menu:
             elif self.menu_page == MenuPages.GAMEMODE_MENU:
                 run = self.gamemode_menu(mouse_pos)
             elif self.menu_page == MenuPages.SINGLEP_MENU:
-                run, p1_name, p2_name = self.singlep_menu(mouse_pos, manager_main, p1_name, p2_name)
+                run, p1_name, p2_name = self.singlep_menu(mouse_pos, manager_single, p1_name)
             elif self.menu_page == MenuPages.MULTIP_MENU:
-                run, p1_name, p2_name = self.multip_menu(mouse_pos, manager_multi, p1_name)
+                run, p1_name, p2_name = self.multip_menu(mouse_pos, manager_multi, p1_name, p2_name)
 
     def main_menu(self, mouse_pos):
         # Renders the main menu text
@@ -119,7 +119,7 @@ class Menu:
 
         return run
 
-    def singlep_menu(self, mouse_pos, manager, p1_name, p2_name):
+    def multip_menu(self, mouse_pos, manager, p1_name, p2_name):
         run = True
         p1_text = draw_text(self.win, "Player 1 Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 380, center=False)
         p2_text = draw_text(self.win, "Player 2 Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 465, center=False)
@@ -151,7 +151,8 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 if play_rect.collidepoint(mouse_pos):
-                    game = Game(self.win, False, p1_name, p2_name)
+                    run = False
+                    game = Game(self.win, True, p1_name, p2_name)
                     game.gameloop()
                     run = False
 
@@ -164,7 +165,7 @@ class Menu:
 
         return run, p1_name, p2_name
 
-    def multip_menu(self, mouse_pos, manager, p1_name):
+    def singlep_menu(self, mouse_pos, manager, p1_name):
         run = True
         p1_text = draw_text(self.win, "Player Name", 30, "Inter-Bold", BLACK, WIDTH / 6, 380, center=False)
 
@@ -198,6 +199,7 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 if play_rect.collidepoint(mouse_pos):
+                    run = False
                     game = Game(self.win, False, p1_name, 'AI')
                     game.gameloop()
                     run = False
