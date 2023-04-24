@@ -8,6 +8,7 @@ An open-source Backgammon implementation written in Python.
 - Dice
 - Moving stones
 - Custom player names
+- Saving and loading
 
 
 Created with ❤️ during summer semester 2023 in Ústí nad Labem.

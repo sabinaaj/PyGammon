@@ -79,11 +79,14 @@ class GameBoard:
         draw_text(self.win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
         return roll_rect
 
-    def draw_save_button(self):
+    def draw_save_button(self, saved):
         roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
         roll_rect = roll_button.get_rect(topleft=(635, 325))
         self.win.blit(roll_button, (635, 325))
-        draw_text(self.win, "Save", 45, "Inter-Regular", BONE_WHITE, 700, 367)
+        if saved:
+            draw_text(self.win, "Saved!", 45, "Inter-Regular", BONE_WHITE, 700, 367)
+        else:
+            draw_text(self.win, "Save", 45, "Inter-Regular", BONE_WHITE, 700, 367)
         return roll_rect
 
     def draw_exit_button(self):

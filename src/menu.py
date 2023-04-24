@@ -77,7 +77,9 @@ class Menu:
                 if play_rect.collidepoint(mouse_pos):
                     self.menu_page = MenuPages.GAMEMODE_MENU
                 if load_rect.collidepoint(mouse_pos):
-                    pass
+                    game = Game(self.win, False, 'Player1', 'Player2')
+                    game.gameloop(True)
+                    run = False
                 if exit_rect.collidepoint(mouse_pos):
                     run = False
                     pygame.quit()
@@ -152,6 +154,7 @@ class Menu:
                     run = False
                     game = Game(self.win, True, p1_name, p2_name)
                     game.gameloop()
+                    run = False
 
                 if back_rect.collidepoint(mouse_pos):
                     self.menu_page = MenuPages.GAMEMODE_MENU
@@ -169,6 +172,7 @@ class Menu:
         play_rect = draw_text(self.win, "PLAY", 30, "Inter-Bold", BLACK, WIDTH / 3, 465, center=False)
 
         back_rect = draw_text(self.win, "BACK", 30, "Inter-Bold", BLACK, WIDTH / 3, 550, center=False)
+
         if back_rect.collidepoint(mouse_pos):
             self.win.blit(self.triangle, (WIDTH / 3 - 30, 555))
 
@@ -198,6 +202,7 @@ class Menu:
                     run = False
                     game = Game(self.win, False, p1_name, 'AI')
                     game.gameloop()
+                    run = False
 
                 if back_rect.collidepoint(mouse_pos):
                     self.menu_page = MenuPages.GAMEMODE_MENU
