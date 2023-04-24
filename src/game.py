@@ -58,7 +58,7 @@ class Game:
     def init_game(self):
         for field in STONES_INIT:
             for i in range(field[1]):
-                self.game_fields[field[0]].add_stone(GameStone(field[0], field[2]))
+                self.game_fields[field[0]].add_stone(GameStone([field[0]], field[2]))
                 if field[2]:  # player has black stones
                     if self.game_fields[field[0]] not in self.player2.fields:
                         self.player2.fields.append(self.game_fields[field[0]])
@@ -262,7 +262,10 @@ class Game:
         print("")
         print(self.chosen_field.number)
 
-        stone = None
+    #TODO: sardinko oprav si prosim sve velice sofistikovane AI diky :)
+        # hotfix :((
+        stone = 0
+        # stone = None
         if self.chosen_field == self.bar:
             stone = self.chosen_field.pop_stone(self.player_turn.has_black_stones)
             if self.chosen_field.is_empty(self.player_turn.has_black_stones):
@@ -276,7 +279,7 @@ class Game:
         if end_field not in self.player_turn.fields:
             self.player_turn.fields.append(end_field)
 
-            # opponent stone got hit and moves to a bar
+            # opponent's stone got hit and moves to bar
             if end_field.has_one_stone():
                 opponent_stone = end_field.pop_stone()
                 self.bar.add_stone(opponent_stone)
@@ -289,6 +292,10 @@ class Game:
                     self.player1.fields.append(self.bar)
 
                 opponent_stone.position.append('bar')
+
+        stone.position.append(end_field.number)
+        if end_field not in self.player_turn.fields:
+            self.player_turn.fields.append(end_field)
 
         end_field.add_stone(stone)
 
