@@ -77,7 +77,7 @@ class Game:
             self.game_fields.append(GameField(i, 113 + (i - 13) * 86.5, 480, False))
         for i in range(19, 25):
             self.game_fields.append(GameField(i, 807.2 + (i - 19) * 86.5, 480, False))
-        self.game_fields.append(GameField(25, 1243.7 + 6 * 86.5, 167, True))
+        self.game_fields.append(GameField(25, 1243.7 + 6 * 86.5, 480, True))
 
     def turn(self):
         if self.game_state == GameState.ROLL_DICE:
@@ -97,12 +97,22 @@ class Game:
 
             if self.game_state == GameState.MOVE_STONE_FROM_BAR:
                 self.bar_clicked()
+
+                self.no_moves = True
+                print(self.chosen_field.number)
+                for field in self.avail_moves[self.chosen_field]:
+                    if field is not None:
+                        self.no_moves = False
+
+                if self.no_moves:
+                    self.end_turn()
+                    break
+
                 while field is None:
                     field, index = self.player_turn.ai_choice(self.avail_moves[self.chosen_field])
                 self.move_stone(field, index)
 
             field = None
-            index = 0
 
             if self.game_state == GameState.MOVE_STONE:
                 while field is None:
@@ -143,6 +153,7 @@ class Game:
 
         self.get_avail_moves()
 
+        print(f"bar: {self.bar.number}, {self.bar.stones}")
         if self.bar in self.player_turn.fields:
             self.game_state = GameState.MOVE_STONE_FROM_BAR
         else:
@@ -179,30 +190,28 @@ class Game:
         self.no_moves = True
 
         for field in self.player_turn.fields:
-            if field == self.bar:
-                self.bar.number = 25 if self.player_turn.has_black_stones else 0
 
             if not self.same_number:
                 if len(self.dice_move) == 3:
-                    current_avail_moves = self.get_current_avail_moves(field, self.dice_move[:2])
+                    current_avail_moves = self.get_current_avail_moves(field.number, self.dice_move[:2])
                     if current_avail_moves[0] or current_avail_moves[1]:
-                        current_avail_moves += self.get_current_avail_moves(field, self.dice_move[2:])
+                        current_avail_moves += self.get_current_avail_moves(field.number, self.dice_move[2:])
                     else:
                         current_avail_moves.append(None)
                 else:
-                    current_avail_moves = self.get_current_avail_moves(field, self.dice_move[:1])
+                    current_avail_moves = self.get_current_avail_moves(field.number, self.dice_move[:1])
 
             else:
-                current_avail_moves = self.get_current_avail_moves(field, self.dice_move)
+                current_avail_moves = self.get_current_avail_moves(field.number, self.dice_move)
                 is_none = False
-                for i, move in enumerate(current_avail_moves):
+                for index, move in enumerate(current_avail_moves):
                     if not move:
                         is_none = True
                     else:
                         if is_none:
-                            current_avail_moves[i] = None
+                            current_avail_moves[index] = None
 
-            print(current_avail_moves)
+            print(f"{field.number}: {current_avail_moves}")
             self.avail_moves[field] = current_avail_moves
 
         print(self.dice_move)
@@ -210,14 +219,17 @@ class Game:
         if self.no_moves:
             self.end_turn()
 
-    def get_current_avail_moves(self, field, throw_list):
+    def get_current_avail_moves(self, start_number, throw_list):
         """
         Gets available moves for one field.
         """
         current_avail_moves = []
 
+        if start_number == -1:  # bar
+            start_number = 25 if self.player_turn.has_black_stones else 0
+
         for throw in throw_list:
-            field_num = self.get_valid_field_num(field.number, throw)
+            field_num = self.get_valid_field_num(start_number, throw)
 
             if field_num is not None:
                 avail_field = self.game_fields[field_num]
@@ -263,9 +275,8 @@ class Game:
         print(self.chosen_field.number)
 
     #TODO: sardinko oprav si prosim sve velice sofistikovane AI diky :)
-        # hotfix :((
-        stone = 0
-        # stone = None
+
+        stone = None
         if self.chosen_field == self.bar:
             stone = self.chosen_field.pop_stone(self.player_turn.has_black_stones)
             if self.chosen_field.is_empty(self.player_turn.has_black_stones):
@@ -286,12 +297,14 @@ class Game:
 
                 if self.player_turn == self.player1:
                     self.player2.fields.remove(end_field)
-                    self.player2.fields.append(self.bar)
+                    if self.bar not in self.player2.fields:
+                        self.player2.fields.append(self.bar)
                 else:
                     self.player1.fields.remove(end_field)
-                    self.player1.fields.append(self.bar)
+                    if self.bar not in self.player1.fields:
+                        self.player1.fields.append(self.bar)
 
-                opponent_stone.position.append('bar')
+                opponent_stone.position.append(self.bar.number)
 
         stone.position.append(end_field.number)
         if end_field not in self.player_turn.fields:
@@ -328,6 +341,8 @@ class Game:
             else:
                 self.get_avail_moves()
 
+
+
     def game_fields_clicked(self, mouse_pos):
         if self.chosen_field:
             for i, field in enumerate(self.avail_moves[self.chosen_field]):
@@ -347,7 +362,6 @@ class Game:
         self.chosen_field = self.bar
         self.get_avail_moves()
         self.game_state = GameState.MOVE_STONE
-
     def bear_off(self):
         for field in self.player_turn.fields:
             if self.player_turn.has_black_stones and field.number > 5:
@@ -450,6 +464,7 @@ class Game:
 
                     if self.bar.rect.collidepoint(mouse_pos) and self.game_state == GameState.MOVE_STONE_FROM_BAR:
                         self.bar_clicked()
+
 
                     if show_menu:
                         if save_rect.collidepoint(mouse_pos):
