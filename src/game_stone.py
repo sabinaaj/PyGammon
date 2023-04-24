@@ -12,7 +12,7 @@ W_STONE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board
 
 class GameStone:
     def __init__(self, position, is_black):
-        self.position = [position]
+        self.position = position
         self.is_black = is_black
         self.image = B_STONE if self.is_black else W_STONE
 
