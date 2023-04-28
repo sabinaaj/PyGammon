@@ -3,7 +3,7 @@ from game_stone import *
 
 class Bar:
     def __init__(self):
-        self._number = None
+        self._number = -1
         self._stones = []
         self._rect = pygame.Rect(WIDTH / 2 - STONE_SIZE / 2, 400, STONE_SIZE, len(self._stones) * STONE_SIZE)
 
@@ -26,6 +26,7 @@ class Bar:
     @property
     def rect(self):
         return self._rect
+
 
     def add_stone(self, stone):
         self._stones.append(stone)
