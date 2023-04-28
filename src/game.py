@@ -93,35 +93,23 @@ class Game:
 
     def ai_turn(self):
         while self._game_state != GameState.ROLL_DICE:
-            field = None
-            index = 0
 
             if self._game_state == GameState.MOVE_STONE_FROM_BAR:
                 self.bar_clicked()
 
-                self.no_moves = True
-                print(self.chosen_field.number)
-                for field in self.avail_moves[self.chosen_field]:
-                    if field is not None:
-                        self.no_moves = False
-
-                if self.no_moves:
+                if not self._avail_moves[self._chosen_field]:
                     self.end_turn()
                     break
 
-                while field is None:
-                    field, index = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
-                self.move_stone(field, index)
-
-            field = None
+                field = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
+                self.move_stone(field)
 
             if self._game_state == GameState.MOVE_STONE:
-                while field is None:
-                    self._chosen_field, index = self._player_turn.ai_choice(self._player_turn.fields)
-                    field, index = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
-                    print(f"{self._chosen_field}, {field}")
+                self._chosen_field = self._player_turn.ai_choice(self._player_turn.fields)
+
+                field = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
                 print(f"3: {self._chosen_field.number}")
-                self.move_stone(field, index)
+                self.move_stone(field)
 
     """
     Roll dice
@@ -146,7 +134,7 @@ class Game:
         if self._dice.throw[0] == self._dice.throw[1]:
             self._same_number = True
             self._dice_move = [self._dice.throw[0], 2 * self._dice.throw[0], 3 * self._dice.throw[0],
-                              4 * self._dice.throw[0]]
+                               4 * self._dice.throw[0]]
         else:
             self._same_number = False
             self._dice_move = copy.deepcopy(self._dice.throw)
@@ -189,27 +177,25 @@ class Game:
         """
         self._no_moves = True
 
-        for field in self.player_turn.fields:
+        for field in self._player_turn.fields:
 
-            if not self.same_number:
-                if len(self.dice_move) == 3:
-                    current_avail_moves = self.get_current_avail_moves(field.number, self.dice_move[:2])
-                    if current_avail_moves[0] or current_avail_moves[1]:
-                        current_avail_moves += self.get_current_avail_moves(field.number, self.dice_move[2:])
-                    else:
-                        current_avail_moves.append(None)
+            if not self._same_number:
+                if len(self._dice_move) == 3:
+                    current_avail_moves = self.get_current_avail_moves(field.number, self._dice_move[:2])
+                    #if current_avail_moves[0][0] in self._dice.throw or current_avail_moves[1][0] in self._dice.throw:
+                    current_avail_moves += self.get_current_avail_moves(field.number, self._dice_move[2:])
                 else:
-                    current_avail_moves = self.get_current_avail_moves(field.number, self.dice_move[:1])
+                    current_avail_moves = self.get_current_avail_moves(field.number, self._dice_move[:1])
 
             else:
-                current_avail_moves = self.get_current_avail_moves(field.number, self.dice_move)
+                current_avail_moves = self.get_current_avail_moves(field.number, self._dice_move)
                 is_none = False
-                for index, move in enumerate(current_avail_moves):
-                    if not move:
-                        is_none = True
-                    else:
-                        if is_none:
-                            current_avail_moves[index] = None
+                # for index, move in enumerate(current_avail_moves):
+                #     if not move:
+                #         is_none = True
+                #     else:
+                #         if is_none:
+                #             current_avail_moves[index] = None
 
             print(f"{field.number}: {current_avail_moves}")
             self._avail_moves[field] = current_avail_moves
@@ -226,7 +212,7 @@ class Game:
         current_avail_moves = []
 
         if start_number == -1:  # bar
-            start_number = 25 if self.player_turn.has_black_stones else 0
+            start_number = 25 if self._player_turn.has_black_stones else 0
 
         for throw in throw_list:
             field_num = self.get_valid_field_num(start_number, throw)
@@ -234,12 +220,8 @@ class Game:
             if field_num is not None:
                 avail_field = self._game_fields[field_num]
                 if avail_field.has_1_or_0_stones() or avail_field in self._player_turn.fields:
-                    current_avail_moves.append(avail_field)
+                    current_avail_moves.append((throw, avail_field))
                     self._no_moves = False
-                else:
-                    current_avail_moves.append(None)
-            else:
-                current_avail_moves.append(None)
 
         if not current_avail_moves:
             self._no_moves = False
@@ -263,7 +245,7 @@ class Game:
 
         return None
 
-    def move_stone(self, end_field, index):
+    def move_stone(self, end_field):
         """
         Moves stone from one field to another.
         """
@@ -285,39 +267,40 @@ class Game:
             if self._chosen_field.is_empty():
                 self._player_turn.fields.remove(self._chosen_field)
 
-        stone.position.append(end_field.number)
-        if end_field not in self._player_turn.fields:
-            self._player_turn.fields.append(end_field)
+        stone.position.append(end_field[1].number)
+        if end_field[1] not in self._player_turn.fields:
+            self._player_turn.fields.append(end_field[1])
 
             # opponent's stone got hit and moves to bar
-            if end_field.has_one_stone():
-                opponent_stone = end_field.pop_stone()
+            if end_field[1].has_one_stone():
+                opponent_stone = end_field[1].pop_stone()
                 self._bar.add_stone(opponent_stone)
 
-                if self.player_turn == self.player1:
-                    self.player2.fields.remove(end_field)
-                    if self.bar not in self.player2.fields:
-                        self.player2.fields.append(self.bar)
+                if self._player_turn == self._player1:
+                    self._player2.fields.remove(end_field[1])
+                    if self._bar not in self._player2.fields:
+                        self._player2.fields.append(self._bar)
                 else:
-                    self.player1.fields.remove(end_field)
-                    if self.bar not in self.player1.fields:
-                        self.player1.fields.append(self.bar)
+                    self._player1.fields.remove(end_field[1])
+                    if self._bar not in self._player1.fields:
+                        self._player1.fields.append(self._bar)
 
-                opponent_stone.position.append(self.bar.number)
+                opponent_stone.position.append(self._bar.number)
 
-        stone.position.append(end_field.number)
-        if end_field not in self.player_turn.fields:
-            self.player_turn.fields.append(end_field)
+        stone.position.append(end_field[1].number)
+        if end_field[1] not in self._player_turn.fields:
+            self._player_turn.fields.append(end_field[1])
 
-        end_field.add_stone(stone)
+        end_field[1].add_stone(stone)
 
         print(
-            f"Kamen se premistil z {self._chosen_field.number} na {end_field.number} a posunul se o {self._dice_move[index]} poli.")
+            f"Kamen se premistil z {self._chosen_field.number} na {end_field[1].number} a posunul se o {end_field[0]} poli.")
         for i in range(len(self._player_turn.fields)):
             print(self._player_turn.fields[i].number, end=", ")
         print("")
 
         self._chosen_field = None
+        index = self._dice_move.index(end_field[0])
 
         if not self._same_number:
             print(f"{index} index")
@@ -340,14 +323,12 @@ class Game:
             else:
                 self.get_avail_moves()
 
-
-
     def game_fields_clicked(self, mouse_pos):
         if self._chosen_field:
-            for i, field in enumerate(self._avail_moves[self._chosen_field]):
+            for field in self._avail_moves[self._chosen_field]:
                 if field:
-                    if field.rect.collidepoint(mouse_pos):
-                        self.move_stone(field, i)
+                    if field[1].rect.collidepoint(mouse_pos):
+                        self.move_stone(field)
                         break
 
         for field in self._player_turn.fields:
@@ -407,7 +388,7 @@ class Game:
         if self._chosen_field and self._game_state != GameState.ROLL_DICE:
             for field in self._avail_moves[self._chosen_field]:
                 if field:
-                    field.glow(self._win)
+                    field[1].glow(self._win)
 
         for field in self._game_fields:
             field.draw_stones(self._win)

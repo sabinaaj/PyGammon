@@ -38,5 +38,5 @@ class AIPlayer(Player):
         """
         Input is list, returns the field AI player chose.
         """
-        choice = random.choice(range(len(avail_fields)))
-        return avail_fields[choice], choice
+        choice = random.choice(avail_fields)
+        return choice
