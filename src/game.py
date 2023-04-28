@@ -77,7 +77,7 @@ class Game:
         for i in range(13, 19):
             self._game_fields.append(GameField(i, 113 + (i - 13) * 86.5, 480, False))
         for i in range(19, 25):
-            self._game_fields.append(GameField(i, 1243.7 + 86.5, 480, False))
+            self._game_fields.append(GameField(i, 807.2 + (i - 19) * 86.5, 480, False))
         self._game_fields.append(GameField(25, 1330, 480, True))
 
     def turn(self):
