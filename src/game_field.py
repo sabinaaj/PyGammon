@@ -9,38 +9,50 @@ GLOW_DOWN = pygame.transform.scale(pygame.image.load(os.path.join('../assets/boa
 class GameField:
 
     def __init__(self, number, x, y, up):
-        self.number = number
+        self._number = number
         # True if field is in upper half
-        self.up = up
-        self.x = x
-        self.y = y
-        self.stones = []
-        self.rect = pygame.Rect(self.x, self.y, FIELD_WIDTH, FIELD_HEIGHT)
+        self._up = up
+        self._x = x
+        self._y = y
+        self._stones = []
+        self._rect = pygame.Rect(self._x, self._y, FIELD_WIDTH, FIELD_HEIGHT)
+
+    @property
+    def number(self):
+        return self._number
+
+    @property
+    def rect(self):
+        return self._rect
+
+    @property
+    def stones(self):
+        return self._stones
 
     def add_stone(self, stone):
-        self.stones.append(stone)
+        self._stones.append(stone)
 
     def pop_stone(self):
-        return self.stones.pop(-1)
+        return self._stones.pop(-1)
 
     def is_empty(self):
-        return len(self.stones) == 0
+        return len(self._stones) == 0
 
     def has_1_or_0_stones(self):
-        return len(self.stones) <= 1
+        return len(self._stones) <= 1
 
     def has_one_stone(self):
-        return len(self.stones) == 1
+        return len(self._stones) == 1
 
     def draw_stones(self, win):
-        for i, stone in enumerate(self.stones):
-            if self.up:
-                stone.draw(win, self.x, self.y + i * 42)
+        for i, stone in enumerate(self._stones):
+            if self._up:
+                stone.draw(win, self._x, self._y + i * 42)
             else:
-                stone.draw(win, self.x, self.y + FIELD_HEIGHT - STONE_SIZE - i * 42)
+                stone.draw(win, self._x, self._y + FIELD_HEIGHT - STONE_SIZE - i * 42)
 
     def glow(self, win):
-        if self.up:
-            win.blit(GLOW_UP, (self.x, self.y))
+        if self._up:
+            win.blit(GLOW_UP, (self._x, self._y))
         else:
-            win.blit(GLOW_DOWN, (self.x, self.y))
+            win.blit(GLOW_DOWN, (self._x, self._y))

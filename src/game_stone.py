@@ -12,9 +12,17 @@ W_STONE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board
 
 class GameStone:
     def __init__(self, position, is_black):
-        self.position = position
-        self.is_black = is_black
-        self.image = B_STONE if self.is_black else W_STONE
+        self._position = position
+        self._is_black = is_black
+        self._image = B_STONE if self._is_black else W_STONE
+
+    @property
+    def position(self):
+        return self._position
+
+    @property
+    def is_black(self):
+        return self._is_black
 
     def draw(self, win, x, y):
-        win.blit(self.image, (x, y))
+        win.blit(self._image, (x, y))
