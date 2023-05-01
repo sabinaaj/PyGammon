@@ -78,7 +78,7 @@ class Game:
             self._game_fields.append(GameField(i, 113 + (i - 13) * 86.5, 480, False))
         for i in range(19, 25):
             self._game_fields.append(GameField(i, 807.2 + (i - 19) * 86.5, 480, False))
-        self._game_fields.append(GameField(25, 1330, 480, True))
+        self._game_fields.append(GameField(25, 1330, 480, False))
 
     def turn(self):
         if self._game_state == GameState.ROLL_DICE:
@@ -104,9 +104,12 @@ class Game:
                 field = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
                 self.move_stone(field)
 
+            field = None
+
             if self._game_state == GameState.MOVE_STONE:
                 self._chosen_field = self._player_turn.ai_choice(self._player_turn.fields)
-
+                while not self._avail_moves[self._chosen_field]:
+                    self._chosen_field = self._player_turn.ai_choice(self._player_turn.fields)
                 field = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
                 print(f"3: {self._chosen_field.number}")
                 self.move_stone(field)
@@ -223,8 +226,8 @@ class Game:
                     current_avail_moves.append((throw, avail_field))
                     self._no_moves = False
 
-        if not current_avail_moves:
-            self._no_moves = False
+        # if not current_avail_moves:
+        #     self._no_moves = False
 
         return current_avail_moves
 
@@ -345,10 +348,10 @@ class Game:
 
     def bear_off(self):
         for field in self._player_turn.fields:
-            if self._player_turn.has_black_stones and field.number > 5:
+            if self._player_turn.has_black_stones and field.number > 6:
                 self._can_bear_off = False
                 return
-            if not self._player_turn.has_black_stones and field.number < 18:
+            if not self._player_turn.has_black_stones and field.number < 19:
                 self._can_bear_off = False
                 return
 
@@ -403,7 +406,7 @@ class Game:
         self.init_fields()
 
         if load:
-            self.load_game()
+            self.load_game('../save.json')
         else:
             self.init_game()
 
@@ -425,6 +428,8 @@ class Game:
                 quit_rect = self._game_board.draw_exit_button()
 
             pygame.display.update()
+
+            run = self.endgame(run)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -455,6 +460,7 @@ class Game:
                             run = False
                             pygame.quit()
 
+
     def format_for_save(self):
         data = {}
         data["game_fields"] = []
@@ -469,7 +475,7 @@ class Game:
         avail_moves_dict = {}
         for key, value in self._avail_moves.items():
             print(type(key.number), value)
-            avail_moves_dict[key.number] = [field.number if field else None for field in value]
+            avail_moves_dict[key.number] = [[field[0], field[1].number] if field else None for field in value]
         data["avail_moves_dict"] = avail_moves_dict
         data["dice_move"] = self._dice_move
         data["dice_used"] = self._dice.used
@@ -513,8 +519,8 @@ class Game:
             json.dump(data, outfile)
             # outfile.write(str(data))
 
-    def load_game(self):
-        with open("../save.json") as json_file:
+    def load_game(self, file: json):
+        with open(file) as json_file:
             data = json.load(json_file)
 
             self._player1.name = data["player_names"][0]["player1"]
@@ -528,7 +534,9 @@ class Game:
             for field_key in data["avail_moves_dict"]:
                 self._avail_moves[self._game_fields[int(field_key)]] = []
                 for field in data["avail_moves_dict"][field_key]:
-                    self._avail_moves[self._game_fields[int(field_key)]].append(self._game_fields[int(field)] if field else None)
+                    self._avail_moves[self._game_fields[int(field_key)]].append(( int(field[0]), self._game_fields[int(field[1])]))
+
+
 
         if data["player_turn"] == self._player1.name:
             self._player_turn = self._player1
@@ -554,3 +562,38 @@ class Game:
             else:
                 is_black = False
             self._bar.add_stone(GameStone(stone["position"], is_black))
+
+    def endgame(self, run):
+        '''
+        function for determining the win type and the winner of the game
+        '''
+        if len(self._game_fields[0].stones) >= 15:
+            winner = self._player2.name
+            run = False
+            self.end_screen(winner)
+
+        elif len(self._game_fields[25].stones) >= 15:
+            winner = self._player1.name
+            run = False
+            self.end_screen(winner)
+
+        return run
+
+    def end_screen(self,winner):
+        run = True
+
+        while run:
+
+            self._win.fill(WHITE)
+
+            draw_text(self._win, f'{winner} won.', 45, 'Inter-Regular', BLACK, WIDTH / 2, HEIGHT - 90,
+                      center=True)
+
+
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    pygame.quit()
+
