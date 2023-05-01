@@ -1,28 +1,20 @@
 import pygame.time
 import pygame_gui
 
-from game import *
-
-
-class MenuPages(Enum):
-    MAIN_MENU = 0
-    GAMEMODE_MENU = 1
-    SINGLEP_MENU = 2
-    MULTIP_MENU = 3
-    DEV_WARNING = 4
-    DEV_MENU = 5
-
+from dev_menu import *
 
 TRIANGLE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')), (25, 25))
 
 
 class Menu:
-    def __init__(self, _win):
-        self._win = _win
+    def __init__(self, win):
+        self._win = win
         self._menu_page = MenuPages.MAIN_MENU
 
     def menu_loop(self):
         run = True
+        dev_menu = DevMenu(self._win)
+
         manager_multi = pygame_gui.UIManager((WIDTH, HEIGHT))
         manager_single = pygame_gui.UIManager((WIDTH, HEIGHT))
         pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600, 50)),
@@ -53,9 +45,9 @@ class Menu:
             elif self._menu_page == MenuPages.MULTIP_MENU:
                 run, p1_name, p2_name = self.multip_menu(mouse_pos, manager_multi, p1_name, p2_name)
             elif self._menu_page == MenuPages.DEV_WARNING:
-                run = self.dev_warning(mouse_pos)
+                run, self._menu_page = dev_menu.dev_warning(mouse_pos)
             elif self._menu_page == MenuPages.DEV_MENU:
-                run = self.dev_menu(mouse_pos)
+                run, self._menu_page = dev_menu.dev_menu(mouse_pos)
 
     def main_menu(self, mouse_pos):
         # Renders the main menu text
@@ -86,7 +78,7 @@ class Menu:
                     self._menu_page = MenuPages.GAMEMODE_MENU
                 if load_rect.collidepoint(mouse_pos):
                     game = Game(self._win, False, 'Player1', 'Player2')
-                    game.gameloop(True)
+                    game.gameloop('../save.json')
                     run = False
                 if version_text.collidepoint(mouse_pos):
                     self._menu_page = MenuPages.DEV_WARNING
@@ -221,76 +213,4 @@ class Menu:
 
         return run, p1_name, 'AI'
 
-    def dev_warning(self, mouse_pos):
-        run = True
-        self._win.fill(WHITE)
-        draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
-        draw_text(self._win, "PyGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
-        draw_text(self._win, "Development mode", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
 
-        draw_text(self._win, "WARNING!", 40, "Inter-Medium", EXTREME_RED, WIDTH / 2, HEIGHT / 2 - 150, center=True)
-        draw_text(self._win, "Things might break. ", 30, "Inter-Medium", EXTREME_RED, WIDTH / 2, HEIGHT / 2 - 115, center=True)
-        draw_text(self._win, "The developers of this application are not liable for any damage", 15, "Inter-Medium", BLACK, WIDTH / 2, HEIGHT / 2 - 70, center=True)
-        draw_text(self._win, "caused by the use of the development mode, whether it be to you, your loved ones, any third party.", 15, "Inter-Medium", BLACK, WIDTH / 2, HEIGHT / 2 - 50, center=True)
-
-        crybaby_rect = draw_text(self._win, ":'(", 30, "Inter-Bold", SABINY_OCI, WIDTH / 2 + 200, HEIGHT / 2, center=True)
-        chad_rect = draw_text(self._win, "YES DADDY", 30, "Inter-Bold", SABINY_OCI, WIDTH / 2 - 200, HEIGHT / 2, center=True)
-
-        if crybaby_rect.collidepoint(mouse_pos):
-            crybaby_rect = draw_text(self._win, ":'(", 30, "Inter-Bold", FAWN, WIDTH / 2 + 200, HEIGHT / 2, center=True)
-        elif chad_rect.collidepoint(mouse_pos):
-            chad_rect = draw_text(self._win, "YES DADDY", 30, "Inter-Bold", FAWN, WIDTH / 2 - 200, HEIGHT / 2, center=True)
-        pygame.display.update()
-
-        for event in pygame.event.get():
-            # Actions after clicking on menu buttons
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if crybaby_rect.collidepoint(mouse_pos):
-                    self._menu_page = MenuPages.MAIN_MENU
-                elif chad_rect.collidepoint(mouse_pos):
-                    self._menu_page = MenuPages.DEV_MENU
-
-        return run
-
-
-    def dev_menu(self, mouse_pos):
-        run = True
-        self._win.fill(WHITE)
-        draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
-        draw_text(self._win, "DevGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
-        draw_text(self._win, "An open-source developer menu.", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
-
-        back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", SABINY_OCI, 35, 820, center=False)
-        gammon_rect = draw_text(self._win, "GAMMON WIN", 30, "Inter-Bold", SABINY_OCI, 200, HEIGHT / 2 - 100, center=True)
-        backg_rect = draw_text(self._win, "BACKGAMMON WIN", 30, "Inter-Bold", SABINY_OCI, 600, HEIGHT / 2 - 100, center=True)
-        norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2 - 100, center=True)
-
-        if back_rect.collidepoint(mouse_pos):
-            back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", FAWN, 35, 820, center=False)
-        elif gammon_rect.collidepoint(mouse_pos):
-            gammon_rect = draw_text(self._win, "GAMMON WIN", 30, "Inter-Bold", FAWN, 200, HEIGHT / 2 - 100, center=True)
-        elif backg_rect.collidepoint(mouse_pos):
-            backg_rect = draw_text(self._win, "BACKGAMMON WIN", 30, "Inter-Bold", FAWN, 600, HEIGHT / 2 - 100, center=True)
-        elif norm_rect.collidepoint(mouse_pos):
-            norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2 - 100, center=True)
-
-        pygame.display.update()
-
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if back_rect.collidepoint(mouse_pos):
-                    self._menu_page = MenuPages.MAIN_MENU
-                if gammon_rect.collidepoint(mouse_pos):
-                    game = Game(self._win, False, 'Player1', 'Player2')
-                    game.gameloop(True)
-                    run = False
-                if backg_rect.collidepoint(mouse_pos):
-                    game = Game(self._win, False, 'Player1', 'Player2')
-                    game.gameloop(True)
-                    run = False
-                if norm_rect.collidepoint(mouse_pos):
-                    game = Game(self._win, False, 'Player1', 'Player2')
-                    game.gameloop(True)
-                    run = False
-
-        return run

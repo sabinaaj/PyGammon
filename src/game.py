@@ -258,8 +258,6 @@ class Game:
         print("")
         print(self._chosen_field.number)
 
-    #TODO: sardinko oprav si prosim sve velice sofistikovane AI diky :)
-
         stone = None
         if self._chosen_field == self._bar:
             stone = self._chosen_field.pop_stone(self._player_turn.has_black_stones)
@@ -400,13 +398,13 @@ class Game:
         draw_text(self._win, self._text, 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 120,
                   center=False)
 
-    def gameloop(self, load=False):
+    def gameloop(self, load=''):
         run = True
         show_menu = False
         self.init_fields()
 
         if load:
-            self.load_game('../save.json')
+            self.load_game(load)
         else:
             self.init_game()
 
@@ -534,9 +532,7 @@ class Game:
             for field_key in data["avail_moves_dict"]:
                 self._avail_moves[self._game_fields[int(field_key)]] = []
                 for field in data["avail_moves_dict"][field_key]:
-                    self._avail_moves[self._game_fields[int(field_key)]].append(( int(field[0]), self._game_fields[int(field[1])]))
-
-
+                    self._avail_moves[self._game_fields[int(field_key)]].append((int(field[0]), self._game_fields[int(field[1])]))
 
         if data["player_turn"] == self._player1.name:
             self._player_turn = self._player1
@@ -544,7 +540,7 @@ class Game:
             self._player_turn = self._player2
 
         for field in data["game_fields"]:
-            is_black = False
+            is_black = None
             for stone in field["stones"]:
                 if stone["color"] == "Black":
                     is_black = True
@@ -553,7 +549,7 @@ class Game:
                 self._game_fields[field["number"]].add_stone(GameStone(stone["position"], is_black))
             if is_black:
                 self._player2.fields.append(self._game_fields[field["number"]])
-            else:
+            elif is_black == False:
                 self._player1.fields.append(self._game_fields[field["number"]])
 
         for stone in data["bar"]:
@@ -579,7 +575,7 @@ class Game:
 
         return run
 
-    def end_screen(self,winner):
+    def end_screen(self, winner):
         run = True
 
         while run:
