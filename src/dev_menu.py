@@ -1,4 +1,5 @@
 from game import *
+from game_stone import *
 
 
 class MenuPages(Enum):
@@ -23,13 +24,10 @@ class DevMenu:
         draw_text(self._win, "Development mode", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
 
         draw_text(self._win, "WARNING!", 40, "Inter-Medium", EXTREME_RED, WIDTH / 2, HEIGHT / 2 - 150, center=True)
-        draw_text(self._win, "Things might break. ", 30, "Inter-Medium", EXTREME_RED, WIDTH / 2, HEIGHT / 2 - 115,
+        draw_text(self._win, "Things might break. ", 25, "Inter-Medium", EXTREME_RED, WIDTH / 2, HEIGHT / 2 - 115,
                   center=True)
-        draw_text(self._win, "The developers of this application are not liable for any damage", 15, "Inter-Medium",
+        draw_text(self._win, "We are not liable for any damage caused to you or your loved ones.", 15, "Inter-Medium",
                   BLACK, WIDTH / 2, HEIGHT / 2 - 70, center=True)
-        draw_text(self._win,
-                  "caused by the use of the development mode, whether it be to you, your loved ones, any third party.",
-                  15, "Inter-Medium", BLACK, WIDTH / 2, HEIGHT / 2 - 50, center=True)
 
         crybaby_rect = draw_text(self._win, ":'(", 30, "Inter-Bold", SABINY_OCI, WIDTH / 2 + 200, HEIGHT / 2,
                                  center=True)
@@ -72,6 +70,8 @@ class DevMenu:
                                center=True)
         norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2 - 100,
                               center=True)
+        daddy_rect = draw_text(self._win, "HARDER DADDY", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
+                              center=True)
 
         if back_rect.collidepoint(mouse_pos):
             back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", FAWN, 35, 820, center=False)
@@ -83,6 +83,9 @@ class DevMenu:
                                    center=True)
         elif norm_rect.collidepoint(mouse_pos):
             norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2 - 100,
+                                  center=True)
+        elif daddy_rect.collidepoint(mouse_pos):
+            daddy_rect = draw_text(self._win, "HARDER DADDY", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
                                   center=True)
 
         pygame.display.update()
@@ -105,6 +108,10 @@ class DevMenu:
                 if norm_rect.collidepoint(mouse_pos):
                     game = Game(self._win, False, 'Player1', 'Player2')
                     game.gameloop('../dev_saves/win.json')
+                    run = False
+                if daddy_rect.collidepoint(mouse_pos):
+                    game = Game(self._win, False, 'Player1', 'Player2')
+                    game.gameloop('../dev_saves/daddy.json')
                     run = False
 
         return run, menu_page
