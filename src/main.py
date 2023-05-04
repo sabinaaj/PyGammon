@@ -5,7 +5,12 @@ from menu import *
 pygame.init()
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('PyGammon')
+
+# Set icon
+pygame_icon = pygame.image.load('../assets/icon.png')
+pygame.display.set_icon(pygame_icon)
+
+pygame.display.set_caption('PyGammon - An open-source Backgammon')
 
 
 def main():

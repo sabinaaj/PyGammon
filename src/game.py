@@ -47,7 +47,7 @@ class Game:
 
         self._game_state = GameState.ROLL_DICE
         self._multiplayer = multiplayer
-        self._player1 = AIPlayer(has_black_stones=False, name=f'{p1_name}')
+        self._player1 = ConsolePlayer(has_black_stones=False, name=f'{p1_name}')
         if self._multiplayer:
             self._player2 = ConsolePlayer(has_black_stones=True, name=f'{p2_name}')
         else:
@@ -354,7 +354,7 @@ class Game:
                 return
 
         self._can_bear_off = True
-        draw_text(self._win, 'Can go away.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
+        draw_text(self._win, 'Can bear off...', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
                   center=False)
 
     """
@@ -374,8 +374,7 @@ class Game:
         else:
             self._player_turn = self._player1
             if not self._multiplayer:
-                self._AIturn = True
-                self.roll_button_clicked()
+                self._AIturn = False
 
         print("------")
         print(f"{self._player_turn.name} je na tahu")
@@ -582,7 +581,9 @@ class Game:
 
             self._win.fill(WHITE)
 
-            draw_text(self._win, f'{winner} won.', 45, 'Inter-Regular', BLACK, WIDTH / 2, HEIGHT - 90,
+            draw_text(self._win, f'{winner} won.', 85, 'Inter-Bold', BLACK, WIDTH / 2, 145,
+                      center=True)
+            draw_text(self._win, 'Statistics', 35, 'Inter-Regular', BLACK, WIDTH / 2, 250,
                       center=True)
 
 
