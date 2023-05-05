@@ -154,7 +154,7 @@ class Menu:
 
                 if play_rect.collidepoint(mouse_pos):
                     run = False
-                    game = Game(self._win, True, p1_name, p2_name)
+                    game = Game(self._win, GameMode.MULTIPLAYER, p1_name, p2_name)
                     game.gameloop()
 
                 if back_rect.collidepoint(mouse_pos):
@@ -201,7 +201,7 @@ class Menu:
 
                 if play_rect.collidepoint(mouse_pos):
                     run = False
-                    game = Game(self._win, False, p1_name, 'AI')
+                    game = Game(self._win, GameMode.SINGLEPLAYER, p1_name, 'AI')
                     game.gameloop()
 
                 if back_rect.collidepoint(mouse_pos):

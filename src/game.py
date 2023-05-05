@@ -52,17 +52,18 @@ class Game:
         self._game_state = GameState.ROLL_DICE
         self._game_mode = game_mode
         if self._game_mode == GameMode.AI_VS_AI:
-            self._player1 = AIPlayer(has_black_stones=False, name=f'{p1_name}')
+            self._player1 = AIPlayer(has_black_stones=False, name='AI')
+            self._AIturn = True
         else:
             self._player1 = ConsolePlayer(has_black_stones=False, name=f'{p1_name}')
+            self._AIturn = False
 
-        if self._game_mode == GameMode.MULTIPLAYER:
+        if self._game_mode != GameMode.MULTIPLAYER:
             self._player2 = AIPlayer(has_black_stones=True, name='AI')
         else:
             self._player2 = ConsolePlayer(has_black_stones=True, name=f'{p2_name}')
 
         self._player_turn = self._player1
-        self._AIturn = False
 
     def init_game(self):
         for field in STONES_INIT:
@@ -377,17 +378,19 @@ class Game:
 
         if self._player_turn == self._player1:
             self._player_turn = self._player2
-            if not self._game_mode:
+            if self._game_mode != GameMode.MULTIPLAYER:
                 self._AIturn = True
                 self.roll_button_clicked()
+            else:
+                self._AIturn = False
+
         else:
             self._player_turn = self._player1
-            if not self._game_mode:
-                if self._game_mode == GameMode.AI_VS_AI:
-                    self._AIturn = True
-                    self.roll_button_clicked()
-                else:
-                    self._AIturn = False
+            if self._game_mode == GameMode.AI_VS_AI:
+                self._AIturn = True
+                self.roll_button_clicked()
+            else:
+                self._AIturn = False
 
         print("------")
         print(f"{self._player_turn.name} je na tahu")
@@ -419,6 +422,9 @@ class Game:
             self.load_game(load)
         else:
             self.init_game()
+
+        if self._game_mode == GameMode.AI_VS_AI:
+            self.roll_button_clicked()
 
         while run:
             pygame.time.Clock().tick(FPS)
@@ -481,7 +487,7 @@ class Game:
         data["bar"] = []
         data["game_state"] = self._game_state.name
         data["same_number"] = self._same_number
-        print(self._dice_move)
+        data["game_mode"] = self._game_mode.name
 
         avail_moves_dict = {}
         for key, value in self._avail_moves.items():
@@ -528,7 +534,6 @@ class Game:
         data = self.format_for_save()
         with open("../save.json", "w") as outfile:
             json.dump(data, outfile)
-            # outfile.write(str(data))
 
     def load_game(self, file: json):
         with open(file) as json_file:
@@ -541,6 +546,7 @@ class Game:
             self._dice_move = data["dice_move"]
             self._dice.used = data["dice_used"]
             self._bar.stones = [GameStone(stone["position"], stone["color"]) for stone in data["bar"]]
+            self._game_mode = GameMode[data["game_mode"]]
 
             for field_key in data["avail_moves_dict"]:
                 self._avail_moves[self._game_fields[int(field_key)]] = []
@@ -562,7 +568,7 @@ class Game:
                 self._game_fields[field["number"]].add_stone(GameStone(stone["position"], is_black))
             if is_black:
                 self._player2.fields.append(self._game_fields[field["number"]])
-            elif is_black == False:
+            elif not is_black:
                 self._player1.fields.append(self._game_fields[field["number"]])
 
         for stone in data["bar"]:

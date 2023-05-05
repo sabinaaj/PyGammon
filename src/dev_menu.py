@@ -72,6 +72,8 @@ class DevMenu:
                               center=True)
         daddy_rect = draw_text(self._win, "BREAK ME DADDY", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
                               center=True)
+        ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", SABINY_OCI, 200, HEIGHT / 2,
+                               center=True)
 
         if back_rect.collidepoint(mouse_pos):
             back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", FAWN, 35, 820, center=False)
@@ -87,6 +89,9 @@ class DevMenu:
         elif daddy_rect.collidepoint(mouse_pos):
             daddy_rect = draw_text(self._win, "BREAK ME DADDY", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
                                   center=True)
+        elif ai_rect.collidepoint(mouse_pos):
+            ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", FAWN, 200, HEIGHT / 2,
+                                center=True)
 
         pygame.display.update()
 
@@ -112,6 +117,10 @@ class DevMenu:
                 if daddy_rect.collidepoint(mouse_pos):
                     game = Game(self._win, False, 'Player1', 'Player2')
                     game.gameloop('../dev_saves/daddy.json')
+                    run = False
+                if ai_rect.collidepoint(mouse_pos):
+                    game = Game(self._win, GameMode.AI_VS_AI, 'Player1', 'Player2')
+                    game.gameloop()
                     run = False
 
         return run, menu_page
