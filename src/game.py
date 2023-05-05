@@ -2,10 +2,9 @@ import copy
 from enum import Enum
 import json
 
+from end_screen import *
 from bar import *
 from dice import *
-from game_board import *
-from game_field import *
 from player import *
 
 STONES_INIT = [(1, 2, True), (6, 5, False), (8, 3, False), (12, 5, True), (13, 5, False), (17, 3, True), (19, 5, True),
@@ -17,13 +16,18 @@ class GameState(Enum):
     MOVE_STONE = 1
     MOVE_STONE_FROM_BAR = 2
 
+class GameMode(Enum):
+    SINGLEPLAYER = 0
+    MULTIPLAYER = 1
+    AI_VS_AI = 2
+
 
 class Game:
     """
     Start game
     """
 
-    def __init__(self, win, multiplayer, p1_name, p2_name):
+    def __init__(self, win, game_mode, p1_name, p2_name):
         self._win = win
 
         self._bar = Bar()
@@ -46,12 +50,17 @@ class Game:
         self._chosen_field = None
 
         self._game_state = GameState.ROLL_DICE
-        self._multiplayer = multiplayer
-        self._player1 = ConsolePlayer(has_black_stones=False, name=f'{p1_name}')
-        if self._multiplayer:
-            self._player2 = ConsolePlayer(has_black_stones=True, name=f'{p2_name}')
+        self._game_mode = game_mode
+        if self._game_mode == GameMode.AI_VS_AI:
+            self._player1 = AIPlayer(has_black_stones=False, name=f'{p1_name}')
         else:
+            self._player1 = ConsolePlayer(has_black_stones=False, name=f'{p1_name}')
+
+        if self._game_mode == GameMode.MULTIPLAYER:
             self._player2 = AIPlayer(has_black_stones=True, name='AI')
+        else:
+            self._player2 = ConsolePlayer(has_black_stones=True, name=f'{p2_name}')
+
         self._player_turn = self._player1
         self._AIturn = False
 
@@ -111,7 +120,7 @@ class Game:
                 while not self._avail_moves[self._chosen_field]:
                     self._chosen_field = self._player_turn.ai_choice(self._player_turn.fields)
                 field = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
-                print(f"3: {self._chosen_field.number}")
+                print(self._chosen_field.number)
                 self.move_stone(field)
 
     """
@@ -368,13 +377,17 @@ class Game:
 
         if self._player_turn == self._player1:
             self._player_turn = self._player2
-            if not self._multiplayer:
+            if not self._game_mode:
                 self._AIturn = True
                 self.roll_button_clicked()
         else:
             self._player_turn = self._player1
-            if not self._multiplayer:
-                self._AIturn = False
+            if not self._game_mode:
+                if self._game_mode == GameMode.AI_VS_AI:
+                    self._AIturn = True
+                    self.roll_button_clicked()
+                else:
+                    self._AIturn = False
 
         print("------")
         print(f"{self._player_turn.name} je na tahu")
@@ -426,12 +439,11 @@ class Game:
 
             pygame.display.update()
 
-            run = self.endgame(run)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
+                    break
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -456,6 +468,8 @@ class Game:
                         if quit_rect.collidepoint(mouse_pos):
                             run = False
                             pygame.quit()
+
+            run = self.endgame(run)
 
 
     def format_for_save(self):
@@ -565,32 +579,15 @@ class Game:
         if len(self._game_fields[0].stones) >= 15:
             winner = self._player2.name
             run = False
-            self.end_screen(winner)
+            end_screen = EndScreen(self._win)
+            end_screen.end_screen(winner, self._game_fields)
 
         elif len(self._game_fields[25].stones) >= 15:
             winner = self._player1.name
             run = False
-            self.end_screen(winner)
+            end_screen = EndScreen(self._win)
+            end_screen.end_screen(winner, self._game_fields)
 
         return run
 
-    def end_screen(self, winner):
-        run = True
-
-        while run:
-
-            self._win.fill(WHITE)
-
-            draw_text(self._win, f'{winner} won.', 85, 'Inter-Bold', BLACK, WIDTH / 2, 145,
-                      center=True)
-            draw_text(self._win, 'Statistics', 35, 'Inter-Regular', BLACK, WIDTH / 2, 250,
-                      center=True)
-
-
-            pygame.display.update()
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                    pygame.quit()
 

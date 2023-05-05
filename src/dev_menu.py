@@ -70,7 +70,7 @@ class DevMenu:
                                center=True)
         norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2 - 100,
                               center=True)
-        daddy_rect = draw_text(self._win, "HARDER DADDY", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
+        daddy_rect = draw_text(self._win, "BREAK ME DADDY", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
                               center=True)
 
         if back_rect.collidepoint(mouse_pos):
@@ -85,7 +85,7 @@ class DevMenu:
             norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2 - 100,
                                   center=True)
         elif daddy_rect.collidepoint(mouse_pos):
-            daddy_rect = draw_text(self._win, "HARDER DADDY", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
+            daddy_rect = draw_text(self._win, "BREAK ME DADDY", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
                                   center=True)
 
         pygame.display.update()

@@ -45,11 +45,16 @@ class GameField:
         return len(self._stones) == 1
 
     def draw_stones(self, win):
-        for i, stone in enumerate(self._stones):
-            if self._up:
-                stone.draw(win, self._x, self._y + i * 42)
-            else:
-                stone.draw(win, self._x, self._y + FIELD_HEIGHT - STONE_SIZE - i * 42)
+        if self._stones:
+            spacing = FIELD_HEIGHT / len(self._stones)
+            if spacing > 42:
+                spacing = 42
+
+            for i, stone in enumerate(self._stones):
+                if self._up:
+                    stone.draw(win, self._x, self._y + i * spacing)
+                else:
+                    stone.draw(win, self._x, self._y + FIELD_HEIGHT - STONE_SIZE - i * spacing)
 
     def glow(self, win):
         if self._up:

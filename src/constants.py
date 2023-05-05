@@ -1,4 +1,4 @@
-BUILD_NUM = "0.08b"
+BUILD_NUM = "0.09x"
 # Pri kazdem novem buildu prosim bumpnout o 1 pismenko
 # Diky -H
 
@@ -28,6 +28,7 @@ EXTREME_RED = (255, 0, 0)
 
 # game stone
 STONE_SIZE = 50
+NUM_OF_STONES = 15
 
 # game field
 FIELD_WIDTH = 50
