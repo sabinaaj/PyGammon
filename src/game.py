@@ -195,21 +195,22 @@ class Game:
             if not self._same_number:
                 if len(self._dice_move) == 3:
                     current_avail_moves = self.get_current_avail_moves(field.number, self._dice_move[:2])
-                    #if current_avail_moves[0][0] in self._dice.throw or current_avail_moves[1][0] in self._dice.throw:
-                    current_avail_moves += self.get_current_avail_moves(field.number, self._dice_move[2:])
+                    if current_avail_moves:
+                        current_avail_moves += self.get_current_avail_moves(field.number, self._dice_move[2:])
                 else:
                     current_avail_moves = self.get_current_avail_moves(field.number, self._dice_move[:1])
 
             else:
                 current_avail_moves = self.get_current_avail_moves(field.number, self._dice_move)
-                is_none = False
-                # for index, move in enumerate(current_avail_moves):
-                #     if not move:
-                #         is_none = True
-                #     else:
-                #         if is_none:
-                #             current_avail_moves[index] = None
 
+                for index, move in enumerate(current_avail_moves):
+                    if move[0] != self._dice_move[index]:
+
+                        current_avail_moves = current_avail_moves[:index]
+                        break
+
+            if current_avail_moves:
+                self._no_moves = False
             print(f"{field.number}: {current_avail_moves}")
             self._avail_moves[field] = current_avail_moves
 
@@ -234,10 +235,6 @@ class Game:
                 avail_field = self._game_fields[field_num]
                 if avail_field.has_1_or_0_stones() or avail_field in self._player_turn.fields:
                     current_avail_moves.append((throw, avail_field))
-                    self._no_moves = False
-
-        # if not current_avail_moves:
-        #     self._no_moves = False
 
         return current_avail_moves
 
