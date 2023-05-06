@@ -52,7 +52,7 @@ class Game:
         self._game_state = GameState.ROLL_DICE
         self._game_mode = game_mode
         if self._game_mode == GameMode.AI_VS_AI:
-            self._player1 = AIPlayer(has_black_stones=False, name='AI')
+            self._player1 = AIPlayer(has_black_stones=False, name='AI 1')
             self._AIturn = True
         else:
             self._player1 = ConsolePlayer(has_black_stones=False, name=f'{p1_name}')
