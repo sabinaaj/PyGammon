@@ -439,6 +439,7 @@ class Game:
                 pygame.draw.rect(self._win, FAWN, [550, 200, 300, 450], 0)
                 save_rect = self._game_board.draw_save_button(False)
                 quit_rect = self._game_board.draw_exit_button()
+                back_to_menu_rect = self._game_board.draw_back_to_menu_button()
 
             pygame.display.update()
 
@@ -469,6 +470,10 @@ class Game:
                             self.save_game()
 
                         if quit_rect.collidepoint(mouse_pos):
+                            run = False
+                            pygame.quit()
+
+                        if back_to_menu_rect.collidepoint(mouse_pos):
                             run = False
                             pygame.quit()
 

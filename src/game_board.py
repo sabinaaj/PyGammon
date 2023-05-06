@@ -79,19 +79,27 @@ class GameBoard:
         draw_text(self._win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
         return roll_rect
 
+#TODO nepise saved!
     def draw_save_button(self, saved):
         roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
-        roll_rect = roll_button.get_rect(topleft=(635, 325))
-        self._win.blit(roll_button, (635, 325))
+        roll_rect = roll_button.get_rect(topleft=(635, 285))
+        self._win.blit(roll_button, (635, 285))
         if saved:
-            draw_text(self._win, "Saved!", 45, "Inter-Regular", BONE_WHITE, 700, 367)
+            draw_text(self._win, "Saved!", 45, "Inter-Regular", BONE_WHITE, 700, 328)
         else:
-            draw_text(self._win, "Save", 45, "Inter-Regular", BONE_WHITE, 700, 367)
+            draw_text(self._win, "Save", 45, "Inter-Regular", BONE_WHITE, 700, 328)
         return roll_rect
 
     def draw_exit_button(self):
         roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg_red.png'))
-        roll_rect = roll_button.get_rect(topleft=(635, 425))
-        self._win.blit(roll_button, (635, 425))
-        draw_text(self._win, "Quit", 45, "Inter-Regular", BONE_WHITE, 700, 467)
+        roll_rect = roll_button.get_rect(topleft=(635, 485))
+        self._win.blit(roll_button, (635, 485))
+        draw_text(self._win, "Quit", 45, "Inter-Regular", BONE_WHITE, 700, 529)
+        return roll_rect
+
+    def draw_back_to_menu_button(self):
+        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg_red.png'))
+        roll_rect = roll_button.get_rect(topleft=(635, 385))
+        self._win.blit(roll_button, (635, 385))
+        draw_text(self._win, "Menu", 45, "Inter-Regular", BONE_WHITE, 700, 429)
         return roll_rect
