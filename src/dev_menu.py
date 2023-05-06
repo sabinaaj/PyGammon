@@ -96,10 +96,10 @@ class DevMenu:
         pygame.display.update()
 
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.type == pygame.QUIT:
-                    run = False
-                    pygame.quit()
                 if back_rect.collidepoint(mouse_pos):
                     menu_page = MenuPages.MAIN_MENU
                 if gammon_rect.collidepoint(mouse_pos):

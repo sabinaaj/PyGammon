@@ -153,12 +153,12 @@ class Game:
             self._dice_move = copy.deepcopy(self._dice.throw)
             self._dice_move.append(self._dice_move[0] + self._dice_move[1])
 
-        self.get_avail_moves()
-
         if self._bar in self._player_turn.fields:
             self._game_state = GameState.MOVE_STONE_FROM_BAR
         else:
             self._game_state = GameState.MOVE_STONE
+
+        self.get_avail_moves()
 
         if self._AIturn:
             self.ai_turn()
@@ -211,8 +211,12 @@ class Game:
 
             if current_avail_moves:
                 self._no_moves = False
+
             print(f"{field.number}: {current_avail_moves}")
             self._avail_moves[field] = current_avail_moves
+
+        if self._game_state == GameState.MOVE_STONE_FROM_BAR and not self._avail_moves[self._bar]:
+            self._no_moves = True
 
         print(self._dice_move)
         print(f"no_moves: {self._no_moves}")
@@ -493,7 +497,6 @@ class Game:
 
         avail_moves_dict = {}
         for key, value in self._avail_moves.items():
-            print(type(key.number), value)
             avail_moves_dict[key.number] = [[field[0], field[1].number] if field else None for field in value]
         data["avail_moves_dict"] = avail_moves_dict
         data["dice_move"] = self._dice_move
@@ -547,7 +550,6 @@ class Game:
             self._game_state = GameState[data["game_state"]]
             self._dice_move = data["dice_move"]
             self._dice.used = data["dice_used"]
-            self._bar.stones = [GameStone(stone["position"], stone["color"]) for stone in data["bar"]]
             self._game_mode = GameMode[data["game_mode"]]
 
             for field_key in data["avail_moves_dict"]:
@@ -570,14 +572,18 @@ class Game:
                 self._game_fields[field["number"]].add_stone(GameStone(stone["position"], is_black))
             if is_black:
                 self._player2.fields.append(self._game_fields[field["number"]])
-            elif not is_black:
+            elif is_black == False: # not is_black don't work
                 self._player1.fields.append(self._game_fields[field["number"]])
 
         for stone in data["bar"]:
             if stone["color"] == "Black":
                 is_black = True
+                if self._bar not in self._player2.fields:
+                    self._player2.fields.append(self._bar)
             else:
                 is_black = False
+                if self._bar not in self._player1.fields:
+                    self._player1.fields.append(self._bar)
             self._bar.add_stone(GameStone(stone["position"], is_black))
 
     def endgame(self, run):
