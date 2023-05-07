@@ -71,13 +71,15 @@ class GameBoard:
     def draw_window(self):
         pygame.draw.rect(self._win, TAN, (WIDTH / 2 - 300, HEIGHT - 125, 600, 90))
 
-    # TODO udelat z toho jednu funkci
+    def draw_button(self, image, coords, text, text_x, text_y):
+        button = pygame.image.load(os.path.join('../assets/board/1', image))
+        rect = button.get_rect(topleft=coords)
+        self._win.blit(button, coords)
+        draw_text(self._win, text, 45, "Inter-Regular", BONE_WHITE, text_x, text_y)
+        return rect
+
     def draw_roll_button(self):
-        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg.png'))
-        roll_rect = roll_button.get_rect(topleft=(WIDTH - 370, HEIGHT - 125))
-        self._win.blit(roll_button, (WIDTH - 370, HEIGHT - 125))
-        draw_text(self._win, "Roll", 45, "Inter-Regular", BONE_WHITE, WIDTH - 305, HEIGHT - 80)
-        return roll_rect
+        return self.draw_button('button_backg.png', (WIDTH - 370, HEIGHT - 125), "Roll", WIDTH - 305, HEIGHT - 80)
 
 #TODO nepise saved!
     def draw_save_button(self, saved):
@@ -91,15 +93,7 @@ class GameBoard:
         return roll_rect
 
     def draw_exit_button(self):
-        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg_red.png'))
-        roll_rect = roll_button.get_rect(topleft=(635, 485))
-        self._win.blit(roll_button, (635, 485))
-        draw_text(self._win, "Quit", 45, "Inter-Regular", BONE_WHITE, 700, 529)
-        return roll_rect
+        return self.draw_button('button_backg_red.png', (635, 485), "Quit", 700, 529)
 
     def draw_back_to_menu_button(self):
-        roll_button = pygame.image.load(os.path.join('../assets/board/1', 'button_backg_red.png'))
-        roll_rect = roll_button.get_rect(topleft=(635, 385))
-        self._win.blit(roll_button, (635, 385))
-        draw_text(self._win, "Menu", 45, "Inter-Regular", BONE_WHITE, 700, 429)
-        return roll_rect
+        return self.draw_button('button_backg_red.png', (635, 385), "Menu", 700, 429)

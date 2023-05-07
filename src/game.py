@@ -215,7 +215,8 @@ class Game:
             print(f"{field.number}: {current_avail_moves}")
             self._avail_moves[field] = current_avail_moves
 
-        if self._game_state == GameState.MOVE_STONE_FROM_BAR and not self._avail_moves[self._bar]:
+        print(self._game_state)
+        if self._bar in self._player_turn.fields and not self._avail_moves[self._bar]:
             self._no_moves = True
 
         print(self._dice_move)
@@ -228,6 +229,9 @@ class Game:
         Gets available moves for one field.
         """
         current_avail_moves = []
+
+        if start_number == 0 or start_number == 25:
+            return current_avail_moves
 
         if start_number == -1:  # bar
             start_number = 25 if self._player_turn.has_black_stones else 0
@@ -338,17 +342,17 @@ class Game:
     def game_fields_clicked(self, mouse_pos):
         if self._chosen_field:
             for field in self._avail_moves[self._chosen_field]:
-                if field:
-                    if field[1].rect.collidepoint(mouse_pos):
-                        self.move_stone(field)
-                        break
+                if field[1].rect.collidepoint(mouse_pos):
+                    self.move_stone(field)
+                    break
 
         for field in self._player_turn.fields:
             if field.rect.collidepoint(mouse_pos) and self._chosen_field != self._bar:
                 if self._chosen_field == field:
                     self._chosen_field = None
                 else:
-                    self._chosen_field = field
+                    if field.number != 0 or field.number != 25:
+                        self._chosen_field = field
 
     def bar_clicked(self):
         self._chosen_field = self._bar
@@ -365,7 +369,7 @@ class Game:
                 return
 
         self._can_bear_off = True
-        draw_text(self._win, 'Can bear off...', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
+        draw_text(self._win, 'You can bear off.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
                   center=False)
 
     """
@@ -413,6 +417,7 @@ class Game:
 
         draw_text(self._win, self._text, 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 120,
                   center=False)
+
 
     def gameloop(self, load=''):
         run = True
