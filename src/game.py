@@ -605,7 +605,7 @@ class Game:
             winner = self._player1.name
             run = False
             end_screen = EndScreen(self._win)
-            end_screen.end_screen(winner, self._game_fields)
+            end_screen.end_screen(winner, self._game_fields, self._player1.name, self._player2.name)
 
         return run
 

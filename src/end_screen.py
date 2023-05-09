@@ -1,5 +1,9 @@
 from game_board import *
 from game_field import *
+from game import *
+
+TRIANGLE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')), (25, 25))
+
 class EndScreen:
     def __init__(self, win):
         self._win = win
@@ -44,8 +48,8 @@ class EndScreen:
         avg_white_stone_lifespan = 0
         avg_black_stone_lifespan = 0
 
-        white_discarded_stones = 0
-        black_discarded_stones = 0
+        white_bar_stones = 0
+        black_bar_stones = 0
 
         for field in game_fields:
             for stone in field.stones:
@@ -55,10 +59,10 @@ class EndScreen:
                         stone_lifespan += 1
                     else:
                         if stone.is_black:
-                            black_discarded_stones += 1
+                            black_bar_stones += 1
                             avg_black_stone_lifespan += stone_lifespan
                         else:
-                            white_discarded_stones += 1
+                            white_bar_stones += 1
                             avg_white_stone_lifespan += stone_lifespan
                         stone_lifespan = 0
 
@@ -67,30 +71,65 @@ class EndScreen:
                 else:
                     avg_white_stone_lifespan += stone_lifespan
 
-        avg_white_stone_lifespan = avg_white_stone_lifespan / (white_discarded_stones + NUM_OF_STONES)
-        avg_black_stone_lifespan = avg_black_stone_lifespan / (black_discarded_stones + NUM_OF_STONES)
+        avg_white_stone_lifespan = avg_white_stone_lifespan / (white_bar_stones + NUM_OF_STONES)
+        avg_black_stone_lifespan = avg_black_stone_lifespan / (black_bar_stones + NUM_OF_STONES)
+        stones_discarded_white = len(game_fields[25].stones)
+        stones_discarded_black = len(game_fields[0].stones)
         print(f'avg_black_stone_lifespan: {avg_black_stone_lifespan}')
         print(f'avg_white_stone_lifespan: {avg_white_stone_lifespan}')
-        print(f'black_discarded_stones: {black_discarded_stones}')
-        print(f'white_discarded_stones: {white_discarded_stones}')
+        print(f'black_discarded_stones: {black_bar_stones}')
+        print(f'white_discarded_stones: {white_bar_stones}')
+
+        return avg_white_stone_lifespan, avg_black_stone_lifespan, white_bar_stones, black_bar_stones, stones_discarded_white, stones_discarded_black
 
         #TODO: Udělej počet vyvedených kamenů
 
-    def end_screen(self, winner, game_fields):
+    def end_screen(self, winner, game_fields, player1, player2):
         run = True
         self.get_win_type(game_fields)
         self.make_statistics(game_fields)
+        avg_white_stone_lifespan, avg_black_stone_lifespan, white_bar_stones, black_bar_stones, stones_discarded_white, stones_discarded_black = self.make_statistics(game_fields)
 
         while run:
 
+
             self._win.fill(WHITE)
+
+            exit_rect = draw_text(self._win, "EXIT", 30, "Inter-Bold", BLACK, 107, 700, center=False)
+
+            if exit_rect.collidepoint(pygame.mouse.get_pos()):
+                self._win.blit(TRIANGLE, (107 - 30, 705))
 
             draw_text(self._win, f'{winner} won.', 85, 'Inter-Bold', BLACK, WIDTH / 2, 145,
                       center=True)
-            draw_text(self._win, self._text, 35, 'Inter-Bold', BLACK, WIDTH / 2, 200,
+
+            draw_text(self._win, self._text, 35, 'Inter-Bold', BLACK, WIDTH / 2, 202.897,
                       center=True)
-            draw_text(self._win, 'Statistics', 35, 'Inter-Regular', BLACK, WIDTH / 2, 700,
+
+            draw_text(self._win, 'Statistics', 35, 'Inter-Regular', BLACK, WIDTH / 2, 250,
                       center=True)
+
+            draw_text(self._win, 'Average stone lifespan', 25, 'Inter-Bold', BLACK, 250, 400, center=True)
+
+            draw_text(self._win, 'Total on bar', 25, 'Inter-Bold', BLACK, 182, 475, center=True)
+
+            draw_text(self._win, 'Total discarded', 25, 'Inter-Bold', BLACK, 204, 550, center=True)
+
+            draw_text(self._win, f'{player1}', 25, 'Inter-Bold', BLACK, 500, 350,)
+
+            draw_text(self._win, f'{player2}', 25, 'Inter-Bold', BLACK, 700, 350,)
+
+            draw_text(self._win, f'{avg_white_stone_lifespan}', 25, 'Inter-Regular', BLACK, 500, 400,)
+
+            draw_text(self._win, f'{avg_black_stone_lifespan}', 25, 'Inter-Regular', BLACK, 700, 400,)
+
+            draw_text(self._win, f'{white_bar_stones}', 25, 'Inter-Regular', BLACK, 500, 475,)
+
+            draw_text(self._win, f'{black_bar_stones}', 25, 'Inter-Regular', BLACK, 700, 475,)
+
+            draw_text(self._win, f'{stones_discarded_white}', 25, 'Inter-Regular', BLACK, 500, 550,)
+
+            draw_text(self._win, f'{stones_discarded_black}', 25, 'Inter-Regular', BLACK, 700, 550,)
 
             pygame.display.update()
 
@@ -98,3 +137,8 @@ class EndScreen:
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if exit_rect.collidepoint(pygame.mouse.get_pos()):
+                        run = False
+                        pygame.quit()
