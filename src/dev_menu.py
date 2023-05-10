@@ -31,14 +31,14 @@ class DevMenu:
 
         crybaby_rect = draw_text(self._win, ":'(", 30, "Inter-Bold", SABINY_OCI, WIDTH / 2 + 200, HEIGHT / 2,
                                  center=True)
-        chad_rect = draw_text(self._win, "YES DADDY", 30, "Inter-Bold", SABINY_OCI, WIDTH / 2 - 200, HEIGHT / 2,
+        chad_rect = draw_text(self._win, "LET ME IN!", 30, "Inter-Bold", SABINY_OCI, WIDTH / 2 - 200, HEIGHT / 2,
                               center=True)
 
         if crybaby_rect.collidepoint(mouse_pos):
             crybaby_rect = draw_text(self._win, ":'(", 30, "Inter-Bold", FAWN, WIDTH / 2 + 200, HEIGHT / 2,
                                      center=True)
         elif chad_rect.collidepoint(mouse_pos):
-            chad_rect = draw_text(self._win, "YES DADDY", 30, "Inter-Bold", FAWN, WIDTH / 2 - 200, HEIGHT / 2,
+            chad_rect = draw_text(self._win, "LET ME IN!", 30, "Inter-Bold", FAWN, WIDTH / 2 - 200, HEIGHT / 2,
                                   center=True)
         pygame.display.update()
 
@@ -70,7 +70,7 @@ class DevMenu:
                                center=True)
         norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2 - 100,
                               center=True)
-        daddy_rect = draw_text(self._win, "BREAK ME DADDY", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
+        daddy_rect = draw_text(self._win, "BREAK ME!", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
                               center=True)
         ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", SABINY_OCI, 200, HEIGHT / 2,
                                center=True)
@@ -87,7 +87,7 @@ class DevMenu:
             norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2 - 100,
                                   center=True)
         elif daddy_rect.collidepoint(mouse_pos):
-            daddy_rect = draw_text(self._win, "BREAK ME DADDY", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
+            daddy_rect = draw_text(self._win, "BREAK ME!", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
                                   center=True)
         elif ai_rect.collidepoint(mouse_pos):
             ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", FAWN, 200, HEIGHT / 2,
