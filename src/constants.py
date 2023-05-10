@@ -1,4 +1,4 @@
-BUILD_NUM = "0.08b"
+BUILD_NUM = "1.00a RC"
 # Pri kazdem novem buildu prosim bumpnout o 1 pismenko
 # Diky -H
 
@@ -22,11 +22,13 @@ NIGHT = (15, 15, 15)
 SPACE_CADET = (34, 34, 59)
 FAWN = (230, 170, 104)
 TAN = (230, 192, 136)
+EXTREME_RED = (255, 0, 0)
 
 # NOVA BARVA PRO KAMENY #2F2D2E
 
 # game stone
 STONE_SIZE = 50
+NUM_OF_STONES = 15
 
 # game field
 FIELD_WIDTH = 50

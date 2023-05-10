@@ -1,26 +1,21 @@
 import pygame.time
 import pygame_gui
+import os.path
 
-from game import *
-
-
-class MenuPages(Enum):
-    MAIN_MENU = 0
-    GAMEMODE_MENU = 1
-    SINGLEP_MENU = 2
-    MULTIP_MENU = 3
-
+from dev_menu import *
 
 TRIANGLE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')), (25, 25))
 
 
 class Menu:
-    def __init__(self, _win):
-        self._win = _win
+    def __init__(self, win):
+        self._win = win
         self._menu_page = MenuPages.MAIN_MENU
 
     def menu_loop(self):
         run = True
+        dev_menu = DevMenu(self._win)
+
         manager_multi = pygame_gui.UIManager((WIDTH, HEIGHT))
         manager_single = pygame_gui.UIManager((WIDTH, HEIGHT))
         pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((WIDTH / 3, 375), (600, 50)),
@@ -39,7 +34,6 @@ class Menu:
             self._win.fill(WHITE)
             draw_text(self._win, "PyGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
             draw_text(self._win, "An open-source Backgammon", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
-            draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
 
             mouse_pos = pygame.mouse.get_pos()
 
@@ -51,10 +45,16 @@ class Menu:
                 run, p1_name, p2_name = self.singlep_menu(mouse_pos, manager_single, p1_name)
             elif self._menu_page == MenuPages.MULTIP_MENU:
                 run, p1_name, p2_name = self.multip_menu(mouse_pos, manager_multi, p1_name, p2_name)
+            elif self._menu_page == MenuPages.DEV_WARNING:
+                run, self._menu_page = dev_menu.dev_warning(mouse_pos)
+            elif self._menu_page == MenuPages.DEV_MENU:
+                run, self._menu_page = dev_menu.dev_menu(mouse_pos)
 
     def main_menu(self, mouse_pos):
         # Renders the main menu text
         run = True
+
+        version_text = draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
 
         play_rect = draw_text(self._win, "PLAY", 30, "Inter-Bold", BLACK, WIDTH / 3, 380, center=False)
         if play_rect.collidepoint(mouse_pos):
@@ -78,9 +78,12 @@ class Menu:
                 if play_rect.collidepoint(mouse_pos):
                     self._menu_page = MenuPages.GAMEMODE_MENU
                 if load_rect.collidepoint(mouse_pos):
-                    game = Game(self._win, False, 'Player1', 'Player2')
-                    game.gameloop(True)
-                    run = False
+                    if os.path.isfile('../save.json'):
+                        game = Game(self._win, False, 'Player1', 'Player2')
+                        game.gameloop('../save.json')
+                        run = False
+                if version_text.collidepoint(mouse_pos):
+                    self._menu_page = MenuPages.DEV_WARNING
                 if exit_rect.collidepoint(mouse_pos):
                     run = False
                     pygame.quit()
@@ -153,7 +156,7 @@ class Menu:
 
                 if play_rect.collidepoint(mouse_pos):
                     run = False
-                    game = Game(self._win, True, p1_name, p2_name)
+                    game = Game(self._win, GameMode.MULTIPLAYER, p1_name, p2_name)
                     game.gameloop()
 
                 if back_rect.collidepoint(mouse_pos):
@@ -200,7 +203,7 @@ class Menu:
 
                 if play_rect.collidepoint(mouse_pos):
                     run = False
-                    game = Game(self._win, False, p1_name, 'AI')
+                    game = Game(self._win, GameMode.SINGLEPLAYER, p1_name, 'AI')
                     game.gameloop()
 
                 if back_rect.collidepoint(mouse_pos):
@@ -211,3 +214,5 @@ class Menu:
                 pygame.quit()
 
         return run, p1_name, 'AI'
+
+

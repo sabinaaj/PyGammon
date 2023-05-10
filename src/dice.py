@@ -6,7 +6,7 @@ import pygame
 
 class Dice:
     def __init__(self):
-        self._throw = [3, 5]
+        self._throw = [1, 6]
         self._used = [False, False]
 
     @property
