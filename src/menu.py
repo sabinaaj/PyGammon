@@ -1,5 +1,6 @@
 import pygame.time
 import pygame_gui
+import os.path
 
 from dev_menu import *
 
@@ -77,9 +78,10 @@ class Menu:
                 if play_rect.collidepoint(mouse_pos):
                     self._menu_page = MenuPages.GAMEMODE_MENU
                 if load_rect.collidepoint(mouse_pos):
-                    game = Game(self._win, False, 'Player1', 'Player2')
-                    game.gameloop('../save.json')
-                    run = False
+                    if os.path.isfile('../save.json'):
+                        game = Game(self._win, False, 'Player1', 'Player2')
+                        game.gameloop('../save.json')
+                        run = False
                 if version_text.collidepoint(mouse_pos):
                     self._menu_page = MenuPages.DEV_WARNING
                 if exit_rect.collidepoint(mouse_pos):

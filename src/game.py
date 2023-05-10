@@ -122,7 +122,6 @@ class Game:
                 while not self._avail_moves[self._chosen_field]:
                     self._chosen_field = self._player_turn.ai_choice(self._player_turn.fields)
                 field = self._player_turn.ai_choice(self._avail_moves[self._chosen_field])
-                print(self._chosen_field.number)
                 self.move_stone(field)
 
     """
@@ -182,7 +181,7 @@ class Game:
                         f' {self._dice.throw[0] + self._dice.throw[1]} in total.'
 
     def move_stone_from_bar_state(self):
-        draw_text(self._win, 'Player has stones on bar.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
+        draw_text(self._win, 'Player has stones on bar.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 345, HEIGHT - 90,
                   center=False)
 
     def get_avail_moves(self):
@@ -213,15 +212,11 @@ class Game:
             if current_avail_moves:
                 self._no_moves = False
 
-            print(f"{field.number}: {current_avail_moves}")
             self._avail_moves[field] = current_avail_moves
 
-        print(self._game_state)
         if self._bar in self._player_turn.fields and not self._avail_moves[self._bar]:
             self._no_moves = True
 
-        print(self._dice_move)
-        print(f"no_moves: {self._no_moves}")
         if self._no_moves:
             self.end_turn()
 
@@ -268,11 +263,6 @@ class Game:
         """
         Moves stone from one field to another.
         """
-        print("pred", end=": ")
-        for i in range(len(self._player_turn.fields)):
-            print(self._player_turn.fields[i].number, end=", ")
-        print("")
-        print(self._chosen_field.number)
 
         stone = None
         if self._chosen_field == self._bar:
@@ -310,26 +300,18 @@ class Game:
 
         end_field[1].add_stone(stone)
 
-        print(
-            f"Kamen se premistil z {self._chosen_field.number} na {end_field[1].number} a posunul se o {end_field[0]} poli.")
-        for i in range(len(self._player_turn.fields)):
-            print(self._player_turn.fields[i].number, end=", ")
-        print("")
 
         self._chosen_field = None
         index = self._dice_move.index(end_field[0])
 
         if not self._same_number:
-            print(f"{index} index")
             if index == 2:
                 self.end_turn()
             else:
                 num = self._dice_move.pop(index)
-                print(f"{num} bylo pouzito.")
                 self._dice.used[index] = True
                 if self._dice_move:
                     num = self._dice_move.pop(-1)
-                    print(f"{num} bylo pouzito.")
                     self.get_avail_moves()
                 else:
                     self.end_turn()
@@ -370,7 +352,7 @@ class Game:
                 return
 
         self._can_bear_off = True
-        draw_text(self._win, 'You can bear off.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 90,
+        draw_text(self._win, 'You can bear off.', 20, 'Inter-Regular', BLACK, WIDTH / 2 - 345, HEIGHT - 90,
                   center=False)
 
     """
@@ -398,11 +380,9 @@ class Game:
             else:
                 self._AIturn = False
 
-        print("------")
-        print(f"{self._player_turn.name} je na tahu")
 
     def draw(self):
-        self._game_board.draw(self._player1.name, self._player2.name)
+        self._game_board.draw(self._player1.name, self._player2.name, len(self._game_fields[25].stones), len(self._game_fields[0].stones))
 
         self._dice.draw(0, self._win, 90, 90, WIDTH - 220, HEIGHT - 125)
         self._dice.draw(1, self._win, 90, 90, WIDTH - 110, HEIGHT - 125)
@@ -416,7 +396,7 @@ class Game:
             field.draw_stones(self._win)
         self._bar.draw_stones(self._win)
 
-        draw_text(self._win, self._text, 20, 'Inter-Regular', BLACK, WIDTH / 2 - 295, HEIGHT - 120,
+        draw_text(self._win, self._text, 20, 'Inter-Regular', BLACK, WIDTH / 2 - 345, HEIGHT - 120,
                   center=False)
 
 

@@ -5,6 +5,8 @@ GLOW_UP = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board
                                  (FIELD_WIDTH, FIELD_HEIGHT))
 GLOW_DOWN = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board/1', 'L_BOT_GLOW.png')),
                                    (FIELD_WIDTH, FIELD_HEIGHT))
+S_W_G = pygame.transform.scale(pygame.image.load("../assets/board/1/s_w_g.png"), (STONE_SIZE, STONE_SIZE))
+S_B_G = pygame.transform.scale(pygame.image.load("../assets/board/1/s_b_g.png"), (STONE_SIZE, STONE_SIZE))
 
 
 class GameField:

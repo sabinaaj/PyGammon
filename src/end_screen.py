@@ -76,10 +76,6 @@ class EndScreen:
         avg_black_stone_lifespan = avg_black_stone_lifespan / (black_bar_stones + NUM_OF_STONES)
         stones_discarded_white = len(game_fields[25].stones)
         stones_discarded_black = len(game_fields[0].stones)
-        print(f'avg_black_stone_lifespan: {avg_black_stone_lifespan}')
-        print(f'avg_white_stone_lifespan: {avg_white_stone_lifespan}')
-        print(f'black_discarded_stones: {black_bar_stones}')
-        print(f'white_discarded_stones: {white_bar_stones}')
 
         return avg_white_stone_lifespan, avg_black_stone_lifespan, white_bar_stones, black_bar_stones, stones_discarded_white, stones_discarded_black
 
@@ -122,9 +118,9 @@ class EndScreen:
 
             draw_text(self._win, f'{player2}', 25, 'Inter-Bold', BLACK, 700, 350,)
 
-            draw_text(self._win, f'{avg_white_stone_lifespan}', 25, 'Inter-Regular', BLACK, 500, 400,)
+            draw_text(self._win, f'{round(avg_white_stone_lifespan, 4)}', 25, 'Inter-Regular', BLACK, 500, 400,)
 
-            draw_text(self._win, f'{avg_black_stone_lifespan}', 25, 'Inter-Regular', BLACK, 700, 400,)
+            draw_text(self._win, f'{round(avg_black_stone_lifespan,4)}', 25, 'Inter-Regular', BLACK, 700, 400,)
 
             draw_text(self._win, f'{white_bar_stones}', 25, 'Inter-Regular', BLACK, 500, 475,)
 
