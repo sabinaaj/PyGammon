@@ -1,7 +1,5 @@
 from menu import *
 
-#TODO: Add proerties to classes
-
 pygame.init()
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))

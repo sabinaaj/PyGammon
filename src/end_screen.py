@@ -1,6 +1,7 @@
 from game_board import *
 from game_field import *
 from game import *
+import menu
 
 TRIANGLE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')), (25, 25))
 
@@ -82,8 +83,6 @@ class EndScreen:
 
         return avg_white_stone_lifespan, avg_black_stone_lifespan, white_bar_stones, black_bar_stones, stones_discarded_white, stones_discarded_black
 
-        #TODO: Udělej počet vyvedených kamenů
-
     def end_screen(self, winner, game_fields, player1, player2):
         run = True
         self.get_win_type(game_fields)
@@ -91,14 +90,18 @@ class EndScreen:
         avg_white_stone_lifespan, avg_black_stone_lifespan, white_bar_stones, black_bar_stones, stones_discarded_white, stones_discarded_black = self.make_statistics(game_fields)
 
         while run:
-
+            mouse_pos = pygame.mouse.get_pos()
 
             self._win.fill(WHITE)
 
             exit_rect = draw_text(self._win, "EXIT", 30, "Inter-Bold", BLACK, 107, 700, center=False)
 
-            if exit_rect.collidepoint(pygame.mouse.get_pos()):
-                self._win.blit(TRIANGLE, (107 - 30, 705))
+            menu_rect = draw_text(self._win, "MENU", 30, "Inter-Bold", BLACK, 300, 700, center=False)
+
+            if exit_rect.collidepoint(mouse_pos):
+                self._win.blit(TRIANGLE, (77, 705))
+            if menu_rect.collidepoint(mouse_pos):
+                self._win.blit(TRIANGLE, (270, 705))
 
             draw_text(self._win, f'{winner} won.', 85, 'Inter-Bold', BLACK, WIDTH / 2, 145,
                       center=True)
@@ -139,6 +142,10 @@ class EndScreen:
                     pygame.quit()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if exit_rect.collidepoint(pygame.mouse.get_pos()):
+                    if exit_rect.collidepoint(mouse_pos):
                         run = False
                         pygame.quit()
+                    if menu_rect.collidepoint(mouse_pos):
+                        run = False
+                        m = menu.Menu(self._win)
+                        m.menu_loop()

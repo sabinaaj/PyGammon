@@ -1,4 +1,5 @@
 from game_stone import *
+from game_board import *
 
 GLOW_UP = pygame.transform.scale(pygame.image.load(os.path.join('../assets/board/1', 'L_TOP_GLOW.png')),
                                  (FIELD_WIDTH, FIELD_HEIGHT))
@@ -45,19 +46,28 @@ class GameField:
         return len(self._stones) == 1
 
     def draw_stones(self, win):
-        if self._stones:
-            spacing = FIELD_HEIGHT / len(self._stones)
-            if spacing > 42:
-                spacing = 42
+        if self._number != 0 and self._number != 25:
+            if self._stones:
+                spacing = FIELD_HEIGHT / len(self._stones)
+                if spacing > 42:
+                    spacing = 42
 
-            for i, stone in enumerate(self._stones):
-                if self._up:
-                    stone.draw(win, self._x, self._y + i * spacing)
-                else:
-                    stone.draw(win, self._x, self._y + FIELD_HEIGHT - STONE_SIZE - i * spacing)
+                for i, stone in enumerate(self._stones):
+                    if self._up:
+                        stone.draw(win, self._x, self._y + i * spacing)
+                    else:
+                        stone.draw(win, self._x, self._y + FIELD_HEIGHT - STONE_SIZE - i * spacing)
 
     def glow(self, win):
-        if self._up:
-            win.blit(GLOW_UP, (self._x, self._y))
+        if self._number != 0 and self._number != 25:
+            if self._up:
+                win.blit(GLOW_UP, (self._x, self._y))
+            else:
+                win.blit(GLOW_DOWN, (self._x, self._y))
         else:
-            win.blit(GLOW_DOWN, (self._x, self._y))
+            if self._up:
+                win.blit(S_B_G, (self._x, self._y))
+                draw_text(win, str(len(self._stones)), 23, "Inter-Bold", WHITE, 1353, 265, center=True)
+            else:
+                win.blit(S_W_G, (self._x, self._y))
+                draw_text(win, str(len(self._stones)), 23, "Inter-Bold", BLACK, 1353, 595, center=True)

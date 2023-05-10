@@ -2,6 +2,7 @@ import copy
 from enum import Enum
 import json
 
+import menu
 from end_screen import *
 from bar import *
 from dice import *
@@ -79,7 +80,7 @@ class Game:
 
     def init_fields(self):
         # number of fields matches white numbering
-        self._game_fields.append(GameField(0, 1330, 167, True))
+        self._game_fields.append(GameField(0, 1327, 240, True))
         for i in range(1, 7):
             self._game_fields.append(GameField(i, 1243.7 - (i - 1) * 86.5, 167, True))
         for i in range(7, 13):
@@ -88,7 +89,7 @@ class Game:
             self._game_fields.append(GameField(i, 113 + (i - 13) * 86.5, 480, False))
         for i in range(19, 25):
             self._game_fields.append(GameField(i, 807.2 + (i - 19) * 86.5, 480, False))
-        self._game_fields.append(GameField(25, 1330, 480, False))
+        self._game_fields.append(GameField(25, 1327, 570, False))
 
     def turn(self):
         if self._game_state == GameState.ROLL_DICE:
@@ -446,7 +447,7 @@ class Game:
 
             if show_menu:
                 pygame.draw.rect(self._win, FAWN, [550, 200, 300, 450], 0)
-                save_rect = self._game_board.draw_save_button(False)
+                save_rect = self._game_board.draw_save_button()
                 quit_rect = self._game_board.draw_exit_button()
                 back_to_menu_rect = self._game_board.draw_back_to_menu_button()
 
@@ -484,7 +485,8 @@ class Game:
 
                         if back_to_menu_rect.collidepoint(mouse_pos):
                             run = False
-                            pygame.quit()
+                            m = menu.Menu(self._win)
+                            m.menu_loop()
 
             run = self.endgame(run)
 
