@@ -13,4 +13,4 @@ An open-source Backgammon implementation written in Python.
 - Dev menu 🤓
 
 
-Created with ❤️ during summer semester 2023 in Ústí nad Labem.
+Made with ❤️ during summer semester 2023 in Ústí nad Labem.
