@@ -1,6 +1,7 @@
 import copy
 from enum import Enum
 import json
+import os
 
 import menu
 from end_screen import *
@@ -524,11 +525,11 @@ class Game:
 
     def save_game(self):
         data = self.format_for_save()
-        with open("../save.json", "w") as outfile:
+        with os.open('../save.json') as outfile:
             json.dump(data, outfile)
 
     def load_game(self, file: json):
-        with open(file) as json_file:
+        with os.open(file) as json_file:
             data = json.load(json_file)
 
             self._player1.name = data["player_names"][0]["player1"]

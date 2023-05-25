@@ -214,5 +214,3 @@ class Menu:
                 pygame.quit()
 
         return run, p1_name, 'AI'
-
-
