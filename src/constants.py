@@ -1,4 +1,4 @@
-BUILD_NUM = "1.00a RC"
+BUILD_NUM = "1.00"
 # Pri kazdem novem buildu prosim bumpnout o 1 pismenko
 # Diky -H
 
