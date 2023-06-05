@@ -525,9 +525,9 @@ class Game:
 
     def save_game(self):
         data = self.format_for_save()
-        with open("../save.json", "w") as outfile:
+        file_path = os.path.join("..", "save.json")
+        with open(file_path, "w") as outfile:
             json.dump(data, outfile)
-
 
     def load_game(self, file: json):
         with open(file) as json_file:
