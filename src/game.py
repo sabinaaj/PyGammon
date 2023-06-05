@@ -525,25 +525,26 @@ class Game:
 
     def save_game(self):
         data = self.format_for_save()
-        with os.open('../save.json') as outfile:
-            json.dump(data, outfile)
+        outfile = os.open("../save.json", os.O_RDWR|os.O_CREAT)
+        json.dump(data, outfile)
+        outfile.close
 
     def load_game(self, file: json):
-        with os.open(file) as json_file:
-            data = json.load(json_file)
+        json_file = os.open(file, os.O_RDONLY)
+        data = json.load(file)
 
-            self._player1.name = data["player_names"][0]["player1"]
-            self._player2.name = data["player_names"][0]["player2"]
-            self._same_number = data["same_number"]
-            self._game_state = GameState[data["game_state"]]
-            self._dice_move = data["dice_move"]
-            self._dice.used = data["dice_used"]
-            self._game_mode = GameMode[data["game_mode"]]
+        self._player1.name = data["player_names"][0]["player1"]
+        self._player2.name = data["player_names"][0]["player2"]
+        self._same_number = data["same_number"]
+        self._game_state = GameState[data["game_state"]]
+        self._dice_move = data["dice_move"]
+        self._dice.used = data["dice_used"]
+        self._game_mode = GameMode[data["game_mode"]]
 
-            for field_key in data["avail_moves_dict"]:
-                self._avail_moves[self._game_fields[int(field_key)]] = []
-                for field in data["avail_moves_dict"][field_key]:
-                    self._avail_moves[self._game_fields[int(field_key)]].append((int(field[0]), self._game_fields[int(field[1])]))
+        for field_key in data["avail_moves_dict"]:
+            self._avail_moves[self._game_fields[int(field_key)]] = []
+            for field in data["avail_moves_dict"][field_key]:
+                self._avail_moves[self._game_fields[int(field_key)]].append((int(field[0]), self._game_fields[int(field[1])]))
 
         if data["player_turn"] == self._player1.name:
             self._player_turn = self._player1
@@ -573,6 +574,7 @@ class Game:
                 if self._bar not in self._player1.fields:
                     self._player1.fields.append(self._bar)
             self._bar.add_stone(GameStone(stone["position"], is_black))
+        json_file.close
 
     def endgame(self, run):
         '''
