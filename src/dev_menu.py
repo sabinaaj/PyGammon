@@ -1,5 +1,6 @@
 from game import *
 from game_stone import *
+from sys import platform as platform
 
 
 class MenuPages(Enum):
@@ -19,7 +20,7 @@ class DevMenu:
         run = True
         menu_page = MenuPages.DEV_WARNING
         self._win.fill(WHITE)
-        draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
+        draw_text(self._win, f"Build {BUILD_NUM} running on {str(platform)}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
         draw_text(self._win, "PyGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
         draw_text(self._win, "Development mode", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
 
@@ -60,7 +61,7 @@ class DevMenu:
         menu_page = MenuPages.DEV_MENU
         self._win.fill(WHITE)
         draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
-        draw_text(self._win, "DevGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
+        draw_text(self._win, f"{str.capitalize(platform)}Gammon", 90, "Inter-Medium", BLACK, WIDTH / 2, 145, center=True)
         draw_text(self._win, "An open-source developer menu.", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
 
         back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", SABINY_OCI, 35, 820, center=False)
@@ -71,9 +72,9 @@ class DevMenu:
         norm_rect = draw_text(self._win, "NORMAL WIN", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2 - 100,
                               center=True)
         daddy_rect = draw_text(self._win, "BREAK ME!", 30, "Inter-Bold", SABINY_OCI, 1100, HEIGHT / 2,
-                              center=True)
-        ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", SABINY_OCI, 200, HEIGHT / 2,
                                center=True)
+        ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", SABINY_OCI, 200, HEIGHT / 2,
+                            center=True)
 
         if back_rect.collidepoint(mouse_pos):
             back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", FAWN, 35, 820, center=False)
@@ -88,7 +89,7 @@ class DevMenu:
                                   center=True)
         elif daddy_rect.collidepoint(mouse_pos):
             daddy_rect = draw_text(self._win, "BREAK ME!", 30, "Inter-Bold", FAWN, 1100, HEIGHT / 2,
-                                  center=True)
+                                   center=True)
         elif ai_rect.collidepoint(mouse_pos):
             ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", FAWN, 200, HEIGHT / 2,
                                 center=True)

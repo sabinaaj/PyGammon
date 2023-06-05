@@ -1,6 +1,7 @@
 import copy
 from enum import Enum
 import json
+import os
 
 import menu
 from end_screen import *
@@ -524,7 +525,8 @@ class Game:
 
     def save_game(self):
         data = self.format_for_save()
-        with open("../save.json", "w") as outfile:
+        file_path = os.path.join("..", "save.json")
+        with open(file_path, "w") as outfile:
             json.dump(data, outfile)
 
     def load_game(self, file: json):
@@ -542,7 +544,8 @@ class Game:
             for field_key in data["avail_moves_dict"]:
                 self._avail_moves[self._game_fields[int(field_key)]] = []
                 for field in data["avail_moves_dict"][field_key]:
-                    self._avail_moves[self._game_fields[int(field_key)]].append((int(field[0]), self._game_fields[int(field[1])]))
+                    self._avail_moves[self._game_fields[int(field_key)]].append(
+                        (int(field[0]), self._game_fields[int(field[1])]))
 
         if data["player_turn"] == self._player1.name:
             self._player_turn = self._player1
@@ -559,7 +562,7 @@ class Game:
                 self._game_fields[field["number"]].add_stone(GameStone(stone["position"], is_black))
             if is_black:
                 self._player2.fields.append(self._game_fields[field["number"]])
-            elif is_black == False: # not is_black don't work
+            elif is_black == False:  # not is_black don't work
                 self._player1.fields.append(self._game_fields[field["number"]])
 
         for stone in data["bar"]:

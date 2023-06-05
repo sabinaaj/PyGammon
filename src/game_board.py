@@ -4,18 +4,18 @@ import pygame
 
 from constants import *
 
-R_BOARD = pygame.image.load('../assets/board/1/R.png')
-TR_R_BOTTOM = pygame.image.load('../assets/board/1/R_BOT.png')
-TR_R_TOP = pygame.image.load('../assets/board/1/R_TOP.png')
-L_BOARD = pygame.image.load('../assets/board/1/L.png')
-TR_L_BOTTOM = pygame.image.load('../assets/board/1/L_BOT.png')
-TR_L_TOP = pygame.image.load('../assets/board/1/L_TOP.png')
-S_W = pygame.transform.scale(pygame.image.load("../assets/board/1/s_w.png"), (STONE_SIZE, STONE_SIZE))
-S_B = pygame.transform.scale(pygame.image.load("../assets/board/1/s_b.png"), (STONE_SIZE, STONE_SIZE))
+R_BOARD = pygame.image.load('../assets/board/R.png')
+TR_R_BOTTOM = pygame.image.load('../assets/board/R_BOT.png')
+TR_R_TOP = pygame.image.load('../assets/board/R_TOP.png')
+L_BOARD = pygame.image.load('../assets/board/L.png')
+TR_L_BOTTOM = pygame.image.load('../assets/board/L_BOT.png')
+TR_L_TOP = pygame.image.load('../assets/board/L_TOP.png')
+S_W = pygame.transform.scale(pygame.image.load("../assets/board/s_w.png"), (STONE_SIZE, STONE_SIZE))
+S_B = pygame.transform.scale(pygame.image.load("../assets/board/s_b.png"), (STONE_SIZE, STONE_SIZE))
 
 
 def draw_text(_win, text, size, font, color, x, y, center=True):
-    font = pygame.font.Font(f'../assets/fonts/Inter/{font}.ttf', size)
+    font = pygame.font.Font(f'../assets/fonts/{font}.ttf', size)
     text_on_display = font.render(text, True, color)
     text_rect = text_on_display.get_rect()
 
@@ -78,7 +78,7 @@ class GameBoard:
         pygame.draw.rect(self._win, TAN, (WIDTH / 2 - 350, HEIGHT - 125, 650, 90))
 
     def draw_button(self, image, coords, text, text_x, text_y):
-        button = pygame.image.load(os.path.join('../assets/board/1', image))
+        button = pygame.image.load(os.path.join('../assets/board', image))
         rect = button.get_rect(topleft=coords)
         self._win.blit(button, coords)
         draw_text(self._win, text, 45, 'Inter-Regular', BONE_WHITE, text_x, text_y)
