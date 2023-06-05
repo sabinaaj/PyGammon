@@ -61,7 +61,7 @@ class DevMenu:
         menu_page = MenuPages.DEV_MENU
         self._win.fill(WHITE)
         draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
-        draw_text(self._win, f"{str.capitalize(platform)}Gammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
+        draw_text(self._win, f"{str.capitalize(platform)}Gammon", 90, "Inter-Medium", BLACK, WIDTH / 2, 145, center=True)
         draw_text(self._win, "An open-source developer menu.", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
 
         back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", SABINY_OCI, 35, 820, center=False)
