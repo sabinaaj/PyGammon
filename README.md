@@ -1,6 +1,8 @@
-PyGammon
+PyGammon - Alpha branch
 ========
-An open-source Backgammon implementation written in Python.
+Beware! You have stumbled upon the alpha branch! Be careful!
+
+PyGammon is an open-source Backgammon implementation written in Python using PyGame.
 
 #### Features
 - Main menu
@@ -13,4 +15,4 @@ An open-source Backgammon implementation written in Python.
 - Dev menu 🤓
 
 
-Made with ❤️ during summer semester 2023 in Ústí nad Labem.
+Made with ❤️ in Ústí nad Labem.
