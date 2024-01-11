@@ -5,7 +5,7 @@ import os.path
 from dev_menu import *
 
 TRIANGLE = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'triangle.png')), (25, 25))
-
+LOGO = pygame.transform.scale(pygame.image.load(os.path.join('../assets/menu', 'pyg_logo-01.png')), (800, 400))
 
 class Menu:
     def __init__(self, win):
@@ -32,8 +32,9 @@ class Menu:
         while run:
             pygame.time.Clock().tick(FPS)
             self._win.fill(WHITE)
-            draw_text(self._win, "PyGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
-            draw_text(self._win, "An open-source Backgammon", 20, "Inter-Medium", BLACK, WIDTH / 2 + 20, 205)
+            self._win.blit(LOGO, (-23, 40))
+            #draw_text(self._win, "PyGammon", 90, "Inter-Medium", BLACK, WIDTH / 3, 100, center=False)
+            draw_text(self._win, "An open-source Backgammon", 30, "Sarala-Regular", BLACK, 390, 285)
 
             mouse_pos = pygame.mouse.get_pos()
 
@@ -54,19 +55,19 @@ class Menu:
         # Renders the main menu text
         run = True
 
-        version_text = draw_text(self._win, f"Build {BUILD_NUM}", 15, "Inter-Medium", BLACK, WIDTH / 150, 10, center=False)
+        version_text = draw_text(self._win, f"Build {BUILD_NUM}", 15, "Sarala-Regular", BLACK, WIDTH / 150, 10, center=False)
 
-        play_rect = draw_text(self._win, "PLAY", 30, "Inter-Bold", BLACK, WIDTH / 3, 380, center=False)
+        play_rect = draw_text(self._win, "Play", 70, "Sarala-Regular", BLACK, 72, 380, center=False)
         if play_rect.collidepoint(mouse_pos):
-            self._win.blit(TRIANGLE, (WIDTH / 3 - 30, 385))
+            play_rect = draw_text(self._win, "Play", 70, "Sarala-Regular", WHITE_PIECE, 72, 380, center=False)
 
-        load_rect = draw_text(self._win, "LOAD GAME", 30, "Inter-Bold", BLACK, WIDTH / 3, 460, center=False)
+        load_rect = draw_text(self._win, "Load", 40, "Sarala-Regular", BLACK, 74, 475, center=False)
         if load_rect.collidepoint(mouse_pos):
-            self._win.blit(TRIANGLE, (WIDTH / 3 - 30, 465))
+            load_rect = draw_text(self._win, "Load", 40, "Sarala-Regular", WHITE_PIECE, 74, 475, center=False)
 
-        exit_rect = draw_text(self._win, "EXIT", 30, "Inter-Bold", BLACK, WIDTH / 3, 540, center=False)
+        exit_rect = draw_text(self._win, "Exit", 40, "Sarala-Regular", BLACK, 74, 537, center=False)
         if exit_rect.collidepoint(mouse_pos):
-            self._win.blit(TRIANGLE, (WIDTH / 3 - 30, 545))
+            exit_rect = draw_text(self._win, "Exit", 40, "Sarala-Regular", FERN_GREEN, 74, 537, center=False)
 
         pygame.display.update()
 

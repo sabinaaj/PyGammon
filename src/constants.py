@@ -1,4 +1,4 @@
-BUILD_NUM = "1.01"
+BUILD_NUM = "2.0 alpha"
 # Pri kazdem novem buildu prosim bumpnout o 1 pismenko
 # Diky -H
 
@@ -23,6 +23,7 @@ SPACE_CADET = (34, 34, 59)
 FAWN = (230, 170, 104)
 TAN = (230, 192, 136)
 EXTREME_RED = (255, 0, 0)
+WHITE_PIECE = (197,171,95)
 
 # NOVA BARVA PRO KAMENY #2F2D2E
 
