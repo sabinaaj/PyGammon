@@ -3,7 +3,7 @@ BUILD_NUM = "1.01AILoop"
 # Diky -H
 
 WIDTH, HEIGHT = 1400, 1000
-FPS = 60
+FPS = 240
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
