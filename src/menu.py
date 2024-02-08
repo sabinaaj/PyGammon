@@ -13,7 +13,9 @@ class Menu:
         self._menu_page = MenuPages.MAIN_MENU
 
     def menu_loop(self):
-        run = True
+        game = Game(self._win, GameMode.AI_VS_AI, 'Player1', 'Player2')
+        game.gameloop()
+        run = False
         dev_menu = DevMenu(self._win)
 
         manager_multi = pygame_gui.UIManager((WIDTH, HEIGHT))

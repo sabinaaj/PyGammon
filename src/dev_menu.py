@@ -75,6 +75,8 @@ class DevMenu:
                                center=True)
         ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", SABINY_OCI, 200, HEIGHT / 2,
                             center=True)
+        ai_loop_rect = draw_text(self._win, "AI vs. AI Loop", 30, "Inter-Bold", SABINY_OCI, 400, HEIGHT / 2,
+                            center=True)
 
         if back_rect.collidepoint(mouse_pos):
             back_rect = draw_text(self._win, "BACK", 30, "Inter-Bold", FAWN, 35, 820, center=False)
@@ -92,6 +94,9 @@ class DevMenu:
                                    center=True)
         elif ai_rect.collidepoint(mouse_pos):
             ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", FAWN, 200, HEIGHT / 2,
+                                center=True)
+        elif ai_rect.collidepoint(mouse_pos):
+            ai_rect = draw_text(self._win, "AI vs. AI", 30, "Inter-Bold", FAWN, 400, HEIGHT / 2,
                                 center=True)
 
         pygame.display.update()
@@ -121,6 +126,10 @@ class DevMenu:
                     run = False
                 if ai_rect.collidepoint(mouse_pos):
                     game = Game(self._win, GameMode.AI_VS_AI, 'Player1', 'Player2')
+                    game.gameloop()
+                    run = False
+                if ai_loop_rect.collidepoint(mouse_pos):
+                    game = Game(self._win, GameMode.AI_VS_AI, 'AI1', 'AI2')
                     game.gameloop()
                     run = False
 

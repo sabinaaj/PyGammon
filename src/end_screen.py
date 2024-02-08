@@ -86,6 +86,7 @@ class EndScreen:
         avg_white_stone_lifespan, avg_black_stone_lifespan, white_bar_stones, black_bar_stones, stones_discarded_white, stones_discarded_black = self.make_statistics(game_fields)
 
         while run:
+
             mouse_pos = pygame.mouse.get_pos()
 
             self._win.fill(WHITE)
@@ -133,15 +134,6 @@ class EndScreen:
             pygame.display.update()
 
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                    pygame.quit()
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if exit_rect.collidepoint(mouse_pos):
-                        run = False
-                        pygame.quit()
-                    if menu_rect.collidepoint(mouse_pos):
-                        run = False
-                        m = menu.Menu(self._win)
-                        m.menu_loop()
+                run = False
+                m = menu.Menu(self._win)
+                m.menu_loop()

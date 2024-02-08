@@ -8,7 +8,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame_icon = pygame.image.load('../assets/appicon.png')
 pygame.display.set_icon(pygame_icon)
 
-pygame.display.set_caption('PyGammon - An open-source Backgammon')
+pygame.display.set_caption(f'PyGammon {BUILD_NUM} - An open-source Backgammon')
 
 
 def main():

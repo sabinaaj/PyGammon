@@ -61,7 +61,7 @@ class Game:
             self._AIturn = False
 
         if self._game_mode != GameMode.MULTIPLAYER:
-            self._player2 = AIPlayer(has_black_stones=True, name='AI')
+            self._player2 = AIPlayer(has_black_stones=True, name='AI 2')
         else:
             self._player2 = ConsolePlayer(has_black_stones=True, name=f'{p2_name}')
 
@@ -583,14 +583,14 @@ class Game:
         if len(self._game_fields[0].stones) >= 15:
             winner = self._player2.name
             run = False
-            end_screen = EndScreen(self._win)
-            end_screen.end_screen(winner, self._game_fields)
+            m = menu.Menu(self._win)
+            m.menu_loop()
 
         elif len(self._game_fields[25].stones) >= 15:
             winner = self._player1.name
             run = False
-            end_screen = EndScreen(self._win)
-            end_screen.end_screen(winner, self._game_fields, self._player1.name, self._player2.name)
+            m = menu.Menu(self._win)
+            m.menu_loop()
 
         return run
 

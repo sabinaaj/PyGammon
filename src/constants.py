@@ -1,4 +1,4 @@
-BUILD_NUM = "1.01w"
+BUILD_NUM = "1.01AILoop"
 # Pri kazdem novem buildu prosim bumpnout o 1 pismenko
 # Diky -H
 
