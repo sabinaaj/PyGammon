@@ -1,6 +1,7 @@
 PyGammon
 ========
 Quick and dirty AI Loop.
+
 An open-source Backgammon implementation written in Python.
 
 #### Features
